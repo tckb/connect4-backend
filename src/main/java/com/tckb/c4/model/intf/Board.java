@@ -124,7 +124,7 @@ public interface Board {
      * An exception to be throwned when a non-registered player tries to place a
      * board piece.
      */
-    public static class PlayerNotRegisteredException extends Exception {
+    public static class PlayerNotRegisteredException extends RuntimeException {
 
         public PlayerNotRegisteredException() {
             super();

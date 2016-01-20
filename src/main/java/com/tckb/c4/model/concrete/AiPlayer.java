@@ -5,10 +5,8 @@
  */
 package com.tckb.c4.model.concrete;
 
-import com.tckb.c4.model.intf.GameObject;
-import com.tckb.c4.model.intf.Player;
+import com.tckb.c4.model.intf.AbstractPlayer;
 import java.util.Random;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -16,18 +14,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author tckb
  */
 @Document
-public class AiPlayer extends GameObject implements Player {
-
-    @Id
-    private final String reference;
+public class AiPlayer extends AbstractPlayer {
 
     public AiPlayer(String reference) {
-        this.reference = reference;
-    }
-
-    @Override
-    public String getReference() {
-        return this.reference;
+        super(reference);
     }
 
     @Override

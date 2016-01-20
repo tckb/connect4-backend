@@ -214,6 +214,8 @@ public class WebServiceResponse {
         private String reference;
         @JsonProperty(value = "active_players")
         private String activePlayers;
+        @JsonProperty(value = "your_chip")
+        private String playerChipColor;
 
         public String getHumanTurn() {
             return humanTurn;
@@ -261,6 +263,10 @@ public class WebServiceResponse {
 
         public String getActivePlayers() {
             return activePlayers;
+        }
+
+        public void setChip(String chipColor) {
+            this.playerChipColor = chipColor;
         }
 
     }

@@ -12,6 +12,8 @@ package com.tckb.c4.model.intf;
  */
 public interface Player {
 
+    public BoardChip getPlayerChip();
+
     /**
      * Places a chip on to the column.
      * <p>

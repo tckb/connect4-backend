@@ -35,12 +35,12 @@ public interface GameService {
      * @throws com.tckb.c4.model.intf.Board.PlayerNotRegisteredException
      * @throws com.tckb.c4.model.intf.Board.ColumnFilledException
      */
-    String[] placeBoardPiece(String playerRef, String boardColumn) throws Board.PlayerNotRegisteredException, Board.ColumnFilledException;
+    public String[] placeBoardPiece(String playerRef, String boardColumn) throws Board.PlayerNotRegisteredException, Board.ColumnFilledException;
 
     /**
      *
      * @param playerRef
      */
-    void registerAndStartGame(String playerRef);
+    public String registerAndStartGame(String playerRef);
 
 }

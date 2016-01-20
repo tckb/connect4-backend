@@ -35,10 +35,11 @@ public class GameServiceImpl implements GameService {
 
     /**
      *
-     * @param playerRef
+     * @param playerRef <p>
+     * @return
      */
     @Override
-    public void registerAndStartGame(String playerRef) {
+    public String registerAndStartGame(String playerRef) {
         thisLogger.log(Level.FINE, "Registering new player with reference: {0}", playerRef);
         try {
 
@@ -52,11 +53,12 @@ public class GameServiceImpl implements GameService {
             repo.save(new PlayerBoard(playerRef, playerBoard));
 
             thisLogger.log(Level.FINE, "BoardPlayer saved in db successfully.");
+            return humanPlayer.getPlayerChip().getColor();
 
         } catch (Board.MaxPlayerRegisteredException ex) {
             thisLogger.log(Level.SEVERE, "Registration failed for reference: " + playerRef, ex);
         }
-
+        return null;
     }
 
     /**

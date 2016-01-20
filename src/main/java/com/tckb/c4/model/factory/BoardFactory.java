@@ -24,9 +24,6 @@ public class BoardFactory extends AbstractGameFactory {
         /**
          * A board with 7 cols and 6 rows.
          */
-        /**
-         * A board with 7 cols and 6 rows.
-         */
         C4_7X6,
         /**
          * A board with 10 cols and 10 rows.

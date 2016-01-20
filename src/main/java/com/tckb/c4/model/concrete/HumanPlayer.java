@@ -5,33 +5,22 @@
  */
 package com.tckb.c4.model.concrete;
 
-import com.tckb.c4.model.intf.GameObject;
-import com.tckb.c4.model.intf.Player;
+import com.tckb.c4.model.intf.AbstractPlayer;
 import java.util.Random;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  *
  * @author tckb
  */
-@Document
-public class HumanPlayer extends GameObject implements Player {
-
-    @Id
-    private final String reference;
+public class HumanPlayer extends AbstractPlayer {
 
     public HumanPlayer(String reference) {
-        this.reference = reference;
-    }
-
-    @Override
-    public String getReference() {
-        return this.reference;
+        super(reference);
     }
 
     @Override
     public String placeChipOnBoard(int column) {
+
         return "row: " + new Random().nextInt(7) + ",column: " + column;
     }
 

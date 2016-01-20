@@ -59,8 +59,10 @@ public class GameController {
         WebServiceResponse welcomeResponse = new WebServiceResponse();
 
         if (thisSession.isNew()) {
+            String chipColor = gameService.registerAndStartGame(thisSession.getId());
             welcomeResponse.getResponseObject().setMessage(newGameMsg);
-            gameService.registerAndStartGame(thisSession.getId());
+            welcomeResponse.getResponseObject().setChip("We have selected a " + chipColor + " chip.");
+
         } else {
             welcomeResponse.getResponseObject().setMessage(oldGameMsg);
         }
