@@ -214,7 +214,7 @@ public class WebServiceResponse {
         private String reference;
         @JsonProperty(value = "active_players")
         private String activePlayers;
-        @JsonProperty(value = "your_chip")
+        @JsonProperty(value = "chip_color")
         private String playerChipColor;
 
         public String getHumanTurn() {

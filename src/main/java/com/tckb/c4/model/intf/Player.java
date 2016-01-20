@@ -10,7 +10,7 @@ package com.tckb.c4.model.intf;
  * <p>
  * @author tckb
  */
-public interface Player {
+public interface Player extends Comparable<Player> {
 
     public BoardChip getPlayerChip();
 

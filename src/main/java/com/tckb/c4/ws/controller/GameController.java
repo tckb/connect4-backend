@@ -61,7 +61,7 @@ public class GameController {
         if (thisSession.isNew()) {
             String chipColor = gameService.registerAndStartGame(thisSession.getId());
             welcomeResponse.getResponseObject().setMessage(newGameMsg);
-            welcomeResponse.getResponseObject().setChip("We have selected a " + chipColor + " chip.");
+            welcomeResponse.getResponseObject().setChip(chipColor);
 
         } else {
             welcomeResponse.getResponseObject().setMessage(oldGameMsg);

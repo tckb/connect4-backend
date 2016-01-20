@@ -5,33 +5,33 @@
  */
 package com.tckb.c4.model.concrete;
 
-import com.tckb.c4.model.intf.BoardChip;
 import com.tckb.c4.model.intf.AbstractC4Board;
+import com.tckb.c4.model.intf.BoardChip;
 import com.tckb.c4.model.intf.Player;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * a concrete implementation of board
  */
 public class C4Board7X6 extends AbstractC4Board {
 
-    private final Map<Player, BoardChip> playerAndChip;
+    private final List<Player> registeredPlayers;
     private final BoardChip[][] boardData;
 
-    public C4Board7X6(Map<Player, BoardChip> playerAndChip, BoardChip[][] boardData) {
-        this.playerAndChip = playerAndChip;
+    public C4Board7X6(List<Player> registeredPlayers, BoardChip[][] boardData) {
+        this.registeredPlayers = registeredPlayers;
         this.boardData = boardData;
     }
 
     public C4Board7X6() {
-        playerAndChip = new HashMap<>();
+        registeredPlayers = new ArrayList<>();
         boardData = new BoardChip[HEIGHT][WIDTH];
     }
 
     @Override
     public void addPlayer(Player player) {
-        playerAndChip.put(player, player.getPlayerChip());
+        registeredPlayers.add(player);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class C4Board7X6 extends AbstractC4Board {
     @Override
     public String moveBoardPiece(Player player, int column) {
 
-        if (!playerAndChip.containsKey(player)) {
+        if (!registeredPlayers.contains(player)) {
             throw new PlayerNotRegisteredException("player: " + player.getReference() + " is not registered with this board.");
         }
 
@@ -52,7 +52,7 @@ public class C4Board7X6 extends AbstractC4Board {
 
     @Override
     public Player[] getRegisteredPlayers() {
-        return playerAndChip.keySet().toArray(new Player[nrPlayersJoined]);
+        return registeredPlayers.toArray(new Player[nrPlayersJoined]);
     }
 
 }
