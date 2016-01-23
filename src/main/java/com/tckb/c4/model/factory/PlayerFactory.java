@@ -9,7 +9,8 @@ import com.tckb.c4.model.concrete.AiPlayer;
 import com.tckb.c4.model.concrete.HumanPlayer;
 import com.tckb.c4.model.intf.BoardChip;
 import com.tckb.c4.model.intf.GameObject;
-import com.tckb.c4.model.intf.GameObject.GameObjectType;
+import com.tckb.c4.model.intf.GameObjectType;
+import com.tckb.c4.model.intf.GameObjectType;
 import java.util.Random;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Random;
 public class PlayerFactory extends AbstractGameFactory {
 
     @Override
-    public GameObject createInstance(GameObjectType type, String... params) {
+    public GameObject createInstance(GameObjectType type, Object... params) {
         if (type instanceof PlayerType) {
             /**
              * create a random colored chip for the player
@@ -36,7 +37,7 @@ public class PlayerFactory extends AbstractGameFactory {
             switch ((PlayerType) type) {
 
                 case Human:
-                    HumanPlayer player = new HumanPlayer(params[0]);
+                    HumanPlayer player = new HumanPlayer((String) params[0]);
                     player.setChip(randomChip);
 
                     return player;
@@ -54,7 +55,7 @@ public class PlayerFactory extends AbstractGameFactory {
     /**
      * type of player to create.
      */
-    public enum PlayerType implements GameObject.GameObjectType {
+    public enum PlayerType implements GameObjectType {
 
         /**
          * Human player.

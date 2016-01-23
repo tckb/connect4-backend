@@ -5,6 +5,11 @@
  */
 package com.tckb.c4.model.intf;
 
+import com.tckb.c4.model.factory.PlayerFactory.PlayerType;
+import com.tckb.c4.model.exception.GameFinished;
+import com.tckb.c4.model.intf.Board.GameStatus;
+import com.tckb.c4.model.exception.IllegalMoveException;
+
 /**
  * A contract defining the player
  * <p>
@@ -15,16 +20,35 @@ public interface Player extends Comparable<Player> {
     public BoardChip getPlayerChip();
 
     /**
-     * Places a chip on to the column.
+     * Places a chip on to the board by a Player.
      * <p>
-     * @param column on of the following columns (A,B,C,D,E)
+     * NB: Not to be used for AI player, else this will raise
+     * {@link IllegalMoveException}
      * <p>
-     * @return returns <code>false</code> iff the column is full, else
-     *         <code>true</code>
+     * @param column on of the following columns.
      * <p>
-     * @see Board
+     * @return chip placement on the board.
+     * <p>
+     * @see Board#getWidth()
+     * @throws IllegalMoveException on invalid move
+     * @throws GameFinished         when the game arrives to a conclusion
+     * @see GameStatus
+     * @see PlayerType#Human
      */
     public String placeChipOnBoard(int column);
+
+    /**
+     * Place a chip on the board by AI.
+     * <p>
+     * NB: Not to be used for human player, else this will raise
+     * {@link IllegalMoveException}
+     * <p>
+     * <p>
+     * @return chip placement on the board.
+     * <p>
+     * @see PlayerType#AI
+     */
+    public String placeChipOnBoard();
 
     /**
      * Return some reference to this player.

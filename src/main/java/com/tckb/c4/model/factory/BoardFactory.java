@@ -5,9 +5,10 @@
  */
 package com.tckb.c4.model.factory;
 
-import com.tckb.c4.model.concrete.C4Board7X6;
+import com.tckb.c4.model.concrete.ConnectNBoard;
 import com.tckb.c4.model.intf.GameObject;
-import com.tckb.c4.model.intf.GameObject.GameObjectType;
+import com.tckb.c4.model.intf.GameObjectType;
+import com.tckb.c4.model.intf.GameObjectType;
 
 /**
  * A factory for creating connect4 boards.
@@ -19,12 +20,12 @@ public class BoardFactory extends AbstractGameFactory {
     /**
      * type of board instance to create.
      */
-    public enum BoardType implements GameObject.GameObjectType {
+    public enum BoardType implements GameObjectType {
 
         /**
          * A board with 7 cols and 6 rows.
          */
-        C4_7X6,
+        C4,
         /**
          * A board with 10 cols and 10 rows.
          */
@@ -32,11 +33,11 @@ public class BoardFactory extends AbstractGameFactory {
     }
 
     @Override
-    public GameObject createInstance(GameObjectType type, String... params) {
+    public GameObject createInstance(GameObjectType type, Object... params) {
         if (type instanceof BoardType) {
             switch ((BoardType) type) {
-                case C4_7X6:
-                    return new C4Board7X6();
+                case C4:
+                    return new ConnectNBoard((Integer) params[0], (Integer) params[1], (Integer) params[2]);
                 default:
                     throw new UnsupportedOperationException("Board is out of stock ;)");
             }

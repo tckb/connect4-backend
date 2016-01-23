@@ -5,6 +5,8 @@
  */
 package com.tckb.c4.model.intf;
 
+import java.util.Objects;
+
 /**
  *
  * @author tckb
@@ -21,4 +23,20 @@ public abstract class BoardChip extends GameObject {
         "WHITE",
         "YELLOW"
     };
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BoardChip) {
+            return getColor().equals(((BoardChip) obj).getColor());
+
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3 * Objects.hashCode(getColor());
+        return hash;
+    }
+
 }

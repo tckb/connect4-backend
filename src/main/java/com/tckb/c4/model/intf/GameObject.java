@@ -15,11 +15,4 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document
 public abstract class GameObject implements Serializable {
-
-    /**
-     * A marker interface for defining the type of game objects.
-     */
-    public static interface GameObjectType {
-    }
-
 }

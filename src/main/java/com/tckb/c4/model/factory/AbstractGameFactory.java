@@ -6,7 +6,7 @@
 package com.tckb.c4.model.factory;
 
 import com.tckb.c4.model.intf.GameObject;
-import com.tckb.c4.model.intf.GameObject.GameObjectType;
+import com.tckb.c4.model.intf.GameObjectType;
 
 /**
  * An abstract factory for creating game instance.
@@ -23,6 +23,6 @@ public abstract class AbstractGameFactory {
      * <p>
      * @return the game instance.
      */
-    public abstract GameObject createInstance(GameObjectType type, String... params);
+    public abstract GameObject createInstance(GameObjectType type, Object... params);
 
 }

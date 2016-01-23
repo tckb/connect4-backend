@@ -5,7 +5,9 @@
  */
 package com.tckb.c4.ws;
 
-import com.tckb.c4.model.intf.Board;
+import com.tckb.c4.model.exception.GameNotSetupException;
+import com.tckb.c4.model.exception.ColumnFilledException;
+import com.tckb.c4.model.exception.PlayerNotRegisteredException;
 
 /**
  *
@@ -23,24 +25,30 @@ public interface GameService {
      *
      * @param playerRef <p>
      * @return <p>
-     * @throws com.tckb.c4.model.intf.Board.PlayerNotRegisteredException
      */
-    boolean isWinningPlayer(String playerRef) throws Board.PlayerNotRegisteredException;
+    boolean isWinningPlayer(String playerRef) throws PlayerNotRegisteredException;
 
     /**
      *
      * @param playerRef
      * @param boardColumn <p>
      * @return <p>
-     * @throws com.tckb.c4.model.intf.Board.PlayerNotRegisteredException
-     * @throws com.tckb.c4.model.intf.Board.ColumnFilledException
+     * @throws com.tckb.c4.model.exception.ColumnFilledException
      */
-    public String[] placeBoardPiece(String playerRef, String boardColumn) throws Board.PlayerNotRegisteredException, Board.ColumnFilledException;
+    public String[] placeBoardPiece(String playerRef, String boardColumn) throws PlayerNotRegisteredException, ColumnFilledException;
 
     /**
      *
      * @param playerRef
+     * @param isMultiplayerGame <p>
+     * @return @throws com.tckb.c4.ws.GameNotSetupException
      */
-    public String registerAndStartGame(String playerRef);
+    public String[] registerAndStartGame(String playerRef, boolean isMultiplayerGame) throws GameNotSetupException;
+
+    /**
+     *
+     * @param configRequst
+     */
+    public void setupBoard(BoardConfiguration configRequst);
 
 }

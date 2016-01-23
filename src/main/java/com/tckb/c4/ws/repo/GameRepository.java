@@ -14,4 +14,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @author tckb
  */
 public interface GameRepository extends MongoRepository<GameObject, String> {
+
 }

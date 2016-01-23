@@ -29,14 +29,13 @@ public class WebServiceResponse {
      * the payload to the response
      */
     @JsonProperty(value = "game_response")
-    private ServerResponse responseObject;
+    private ServerResponse responseObject = null;
 
     /**
      * create generic webresponse
      */
     public WebServiceResponse() {
         this.responseMetaData = new ResponseMetaData(WebServiceStatuses.SUCCESS);
-        this.responseObject = new ServerResponse();
     }
 
     /**
@@ -63,6 +62,9 @@ public class WebServiceResponse {
      * @return
      */
     public ServerResponse getResponseObject() {
+        if (responseObject == null) {
+            responseObject = new ServerResponse();
+        }
         return responseObject;
     }
 
@@ -216,6 +218,8 @@ public class WebServiceResponse {
         private String activePlayers;
         @JsonProperty(value = "chip_color")
         private String playerChipColor;
+        @JsonProperty(value = "board_session")
+        private String boardSession;
 
         public String getHumanTurn() {
             return humanTurn;
@@ -265,8 +269,24 @@ public class WebServiceResponse {
             return activePlayers;
         }
 
-        public void setChip(String chipColor) {
+        public void setChipColor(String chipColor) {
             this.playerChipColor = chipColor;
+        }
+
+        public String getPlayerChipColor() {
+            return playerChipColor;
+        }
+
+        public void setPlayerChipColor(String playerChipColor) {
+            this.playerChipColor = playerChipColor;
+        }
+
+        public String getBoardSession() {
+            return boardSession;
+        }
+
+        public void setBoardSession(String boardSession) {
+            this.boardSession = boardSession;
         }
 
     }

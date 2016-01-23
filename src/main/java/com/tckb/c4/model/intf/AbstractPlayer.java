@@ -26,6 +26,10 @@ public abstract class AbstractPlayer extends GameObject implements Player {
         this.chip = chip;
     }
 
+    public BoardChip getChip() {
+        return chip;
+    }
+
     @Override
     public String getReference() {
         return this.reference;

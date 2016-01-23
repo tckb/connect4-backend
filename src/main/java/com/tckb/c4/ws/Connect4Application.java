@@ -1,6 +1,6 @@
 package com.tckb.c4.ws;
 
-import com.tckb.c4.model.intf.Board.MaxPlayerRegisteredException;
+import com.tckb.c4.model.exception.MaxPlayerRegisteredException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
