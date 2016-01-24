@@ -6,13 +6,11 @@
 package com.tckb.c4.model.intf;
 
 import java.io.Serializable;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * A marker abstract class for the objects in game.
  * <p>
  * @author tckb
  */
-@Document
-public abstract class GameObject implements Serializable {
+public interface GameObject extends Serializable {
 }

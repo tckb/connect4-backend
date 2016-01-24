@@ -8,7 +8,6 @@ package com.tckb.c4.model.factory;
 import com.tckb.c4.model.concrete.ConnectNBoard;
 import com.tckb.c4.model.intf.GameObject;
 import com.tckb.c4.model.intf.GameObjectType;
-import com.tckb.c4.model.intf.GameObjectType;
 
 /**
  * A factory for creating connect4 boards.

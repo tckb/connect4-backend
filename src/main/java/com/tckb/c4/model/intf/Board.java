@@ -5,8 +5,10 @@
  */
 package com.tckb.c4.model.intf;
 
-import com.tckb.c4.model.exception.ColumnFilledException;
-import com.tckb.c4.model.exception.MaxPlayerRegisteredException;
+import com.tckb.c4.model.exception.GameException.ColumnFilledException;
+import com.tckb.c4.model.exception.GameException.GameFinished;
+import com.tckb.c4.model.exception.GameException.IllegalMoveException;
+import com.tckb.c4.model.exception.GameException.MaxPlayerRegisteredException;
 import java.util.List;
 
 /**
@@ -43,15 +45,16 @@ public interface Board {
     /**
      *
      * @param player <p>
-     * @throws com.tckb.c4.model.intf.Board.MaxPlayerRegisteredException
+     * @throws
+     * com.tckb.c4.model.exception.GameException.MaxPlayerRegisteredException
      */
     public void registerPlayer(Player player) throws MaxPlayerRegisteredException;
 
     /**
      * Places a board piece into the column
      * <p>
-     * @param player player making the move
-     * @param column column to which the player is placing the board piece
+     * @param playerRef player making the move
+     * @param column    column to which the player is placing the board piece
      * <p>
      * @return the exact piece placement on the board (for eg,
      *         <code>A1, A2</code> )
@@ -65,7 +68,7 @@ public interface Board {
      * @throws IllegalMoveException  thrown when a illegal move is placed by a
      *                               player.
      */
-    public String moveBoardPiece(Player player, int column) throws ColumnFilledException;
+    public String placeChipOnBoard(String playerRef, Integer column) throws ColumnFilledException;
 
     /**
      * Returns the winning player. Incase of tie, returns null
@@ -74,28 +77,28 @@ public interface Board {
      * <p>
      * @see GameStatus
      */
-    public Player getWinner();
+    public String getWinner();
 
     /**
      * Returns the number of players that are allowed for the board game
      * <p>
      * @return
      */
-    public int getMaxPlayers();
+    public Integer getMaxPlayers();
 
     /**
      * Returns the width of the board.
      * <p>
      * @return width in cells
      */
-    public int getWidth();
+    public Integer getWidth();
 
     /**
      * Returns the height of the board
      * <p>
      * @return height in cells
      */
-    public int getHeight();
+    public Integer getHeight();
 
     /**
      * Returns all players registered to this board.

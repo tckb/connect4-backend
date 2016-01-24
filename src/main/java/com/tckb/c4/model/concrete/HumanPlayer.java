@@ -5,9 +5,9 @@
  */
 package com.tckb.c4.model.concrete;
 
+import com.tckb.c4.model.exception.GameException.IllegalMoveException;
 import com.tckb.c4.model.intf.AbstractPlayer;
-import com.tckb.c4.model.exception.IllegalMoveException;
-import java.util.Random;
+import com.tckb.c4.model.intf.BoardChip;
 
 /**
  *
@@ -15,17 +15,12 @@ import java.util.Random;
  */
 public class HumanPlayer extends AbstractPlayer {
 
-    public HumanPlayer(String reference) {
-        super(reference);
+    public HumanPlayer(String reference, BoardChip chip) {
+        super(reference, chip);
     }
 
     @Override
-    public String placeChipOnBoard(int column) {
-        return "row: " + new Random().nextInt(7) + ",column: " + column;
-    }
-
-    @Override
-    public String placeChipOnBoard() {
+    public int autoPlaceChipColumn() {
         throw new IllegalMoveException();
     }
 

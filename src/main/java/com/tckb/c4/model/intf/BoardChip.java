@@ -11,23 +11,22 @@ import java.util.Objects;
  *
  * @author tckb
  */
-public abstract class BoardChip extends GameObject {
+public class BoardChip implements GameObject {
 
-    public abstract String getColor();
+    private final String chipColor;
 
-    public static String[] CHIP_COLORS = {
-        "BLUE",
-        "BLACK",
-        "GREEN",
-        "RED",
-        "WHITE",
-        "YELLOW"
-    };
+    public BoardChip(String chipColor) {
+        this.chipColor = chipColor;
+    }
+
+    public String getChipColor() {
+        return chipColor;
+    }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof BoardChip) {
-            return getColor().equals(((BoardChip) obj).getColor());
+            return getChipColor().equals(((BoardChip) obj).getChipColor());
 
         }
         return false;
@@ -35,8 +34,17 @@ public abstract class BoardChip extends GameObject {
 
     @Override
     public int hashCode() {
-        int hash = 3 * Objects.hashCode(getColor());
+        int hash = 3 * Objects.hashCode(getChipColor());
         return hash;
     }
+
+    public static final String[] CHIP_COLORS = {
+        "BLUE",
+        "BLACK",
+        "GREEN",
+        "RED",
+        "WHITE",
+        "YELLOW"
+    };
 
 }

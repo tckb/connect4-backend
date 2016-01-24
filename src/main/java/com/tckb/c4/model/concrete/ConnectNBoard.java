@@ -5,56 +5,52 @@
  */
 package com.tckb.c4.model.concrete;
 
-import com.tckb.c4.model.exception.ColumnFilledException;
-import com.tckb.c4.model.exception.GameFinished;
-import com.tckb.c4.model.exception.IllegalMoveException;
-import com.tckb.c4.model.exception.MaxPlayerRegisteredException;
-import com.tckb.c4.model.exception.PlayerNotRegisteredException;
+import com.tckb.c4.model.exception.GameException.ColumnFilledException;
+import com.tckb.c4.model.exception.GameException.GameFinished;
+import com.tckb.c4.model.exception.GameException.IllegalMoveException;
+import com.tckb.c4.model.exception.GameException.MaxPlayerRegisteredException;
+import com.tckb.c4.model.exception.GameException.PlayerNotRegisteredException;
 import com.tckb.c4.model.intf.Board;
 import com.tckb.c4.model.intf.BoardChip;
 import com.tckb.c4.model.intf.GameObject;
 import com.tckb.c4.model.intf.Player;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * A Connect-n game board.
  * <p>
  * @author tckb
  */
-public class ConnectNBoard extends GameObject implements Board {
+public class ConnectNBoard implements GameObject, Board {
 
-    @Field(value = "board_width")
-    private int boardWidth;
-    @Field(value = "board_height")
-    private int boardHeight;
-    @Field(value = "max_players")
-    private int maxPlayers;
-    @Field(value = "max_win_con")
-    private int maxConnections;
-    @Field(value = "board_data")
+    private Integer boardWidth;
+    private Integer boardHeight;
+    private final Integer maxPlayers;
+    private Integer maxConnections;
     private BoardChip[][] boardData;
-    @Field(value = "registered_players")
-    private List<Player> registeredPlayers;
-    @Field(value = "players_joined")
-    private int nrPlayersJoined;
-    @Field(value = "winning_player")
-    private Player winningPlayer;
+    private final List<Player> registeredPlayers;
+    private Integer nrPlayersJoined;
+    private String winningPlayer;
+    private String testString = "test";
+    protected static final Logger thisLogger = Logger.getLogger(Board.class.getName());
 
     @PersistenceConstructor
-    public ConnectNBoard(Integer width, Integer height, Integer winingConnections) {
+    public ConnectNBoard(Integer boardWidth, Integer boardHeight, Integer maxConnections) {
+        thisLogger.log(Level.INFO, "Initializing board with width: {0} height: {1}", new Object[]{boardWidth, boardHeight});
         maxPlayers = 2;
         nrPlayersJoined = 0;
         registeredPlayers = new ArrayList<>();
-        this.boardWidth = width;
-        this.boardHeight = height;
-        this.maxConnections = winingConnections;
+        this.boardWidth = boardWidth;
+        this.boardHeight = boardHeight;
+        this.maxConnections = maxConnections;
         boardData = new BoardChip[boardWidth][boardHeight];
+        winningPlayer = null;
     }
 
     /**
@@ -63,10 +59,10 @@ public class ConnectNBoard extends GameObject implements Board {
      * @return true if the board is completely filled with board pieces
      */
     private boolean isBoardFull() {
-        int colsFilled = 0;
-        for (int r = 0; r < getHeight(); r++) {
-            for (int c = 0; c < getWidth(); c++) {
-                if (boardData[r][c] != null) {
+        Integer colsFilled = 0;
+        for (Integer r = 0; r < boardHeight; r++) {
+            for (Integer c = 0; c < boardWidth; c++) {
+                if (boardData[c][r] != null) {
                     colsFilled++;
                 }
             }
@@ -79,114 +75,141 @@ public class ConnectNBoard extends GameObject implements Board {
      * <p>
      * @return
      */
-    private Player checkforConnect4() {
+    private String checkforConnect4() {
 
-        Map<Player, Integer> playerConnections = new HashMap<>();
+        thisLogger.info("Checking rows...");
+        //Check Rows
+        for (int rows = 0; rows < boardHeight; rows++) {
+            for (int columns = 0; columns < boardWidth - maxConnections - 1; columns++) {
+                boolean player1Connect = true, player2Connect = true;
 
-        checkAndResetCounter(playerConnections);
-
-        Player winner = null;
-
-        // check vertical connections (|)
-        for (int x = 0; x < getWidth(); x++) {
-            for (int y = 0; y <= getHeight() - maxConnections; y++) {
                 for (int o = 0; o < maxConnections; o++) {
-                    BoardChip chip = boardData[x][y + o];
-                    if (chip != null) {
-                        for (Player player : getRegisteredPlayers()) {
-                            if (chip.equals(player.getPlayerChip())) {
-                                playerConnections.put(player, playerConnections.get(player) + 1);
-                            }
-                        }
+
+                    if (player1Connect
+                            && !Objects.equals(boardData[columns + o][rows], registeredPlayers.get(0).getPlayerChip())) {
+                        player1Connect = false;
+
                     }
-
-                }
-            }
-
-            winner = checkAndResetCounter(playerConnections);
-
-            if (winner != null) {
-                return winner;
-            }
-
-            // check horizontal connections  (--)
-            for (int y = 0; y < getHeight(); y++) {
-                for (x = 0; x <= getWidth() - maxConnections; x++) {
-                    for (int o = 0; o < maxConnections; o++) {
-                        BoardChip chip = boardData[x][y + o];
-                        if (chip != null) {
-                            for (Player player : getRegisteredPlayers()) {
-                                if (chip.equals(player.getPlayerChip())) {
-                                    playerConnections.put(player, playerConnections.get(player) + 1);
-
-                                }
-                            }
-                        }
+                    if (player2Connect
+                            && !Objects.equals(boardData[columns + o][rows], registeredPlayers.get(1).getPlayerChip())) {
+                        player2Connect = false;
 
                     }
                 }
 
-            }
+                if (player1Connect) {
+                    return registeredPlayers.get(0).getReference();
 
-            winner = checkAndResetCounter(playerConnections);
+                }
+                if (player2Connect) {
+                    return registeredPlayers.get(1).getReference();
 
-            if (winner != null) {
-                return winner;
-            }
-
-            // check right diagonal (/)
-            for (x = 0; x <= getWidth() - maxConnections; x++) {
-                for (int y = 0; y <= getHeight() - maxConnections; y++) {
-
-                    for (int o = 0; o < maxConnections; o++) {
-                        BoardChip chip = boardData[x][y + o];
-                        if (chip != null) {
-                            for (Player player : getRegisteredPlayers()) {
-                                if (chip.equals(player.getPlayerChip())) {
-                                    playerConnections.put(player, playerConnections.get(player) + 1);
-
-                                }
-                            }
-                        }
-
-                    }
                 }
 
             }
         }
 
-        winner = checkAndResetCounter(playerConnections);
+        thisLogger.info("Checking columns...");
 
-        if (winner != null) {
-            return winner;
-        }
-        // check left diagonal (\)
-        for (int x = getWidth() - 1; x >= maxConnections - 1; x--) {
-            for (int y = 0; y <= getHeight() - maxConnections; y++) {
+        //Check Columns
+        for (int rows = 0; rows < boardHeight - maxConnections - 1; rows++) {
+            for (int columns = 0; columns < boardWidth; columns++) {
+                boolean player1Connect = true, player2Connect = true;
+
                 for (int o = 0; o < maxConnections; o++) {
-                    BoardChip chip = boardData[x][y + o];
-                    if (chip != null) {
-                        for (Player player : getRegisteredPlayers()) {
-                            if (chip.equals(player.getPlayerChip())) {
-                                playerConnections.put(player, playerConnections.get(player) + 1);
 
-                            }
-                        }
+                    if (player1Connect
+                            && !Objects.equals(boardData[columns][rows + o], registeredPlayers.get(0).getPlayerChip())) {
+                        player1Connect = false;
+
                     }
+                    if (player2Connect
+                            && !Objects.equals(boardData[columns][rows + o], registeredPlayers.get(1).getPlayerChip())) {
+                        player2Connect = false;
+
+                    }
+                }
+                if (player1Connect) {
+                    return registeredPlayers.get(0).getReference();
 
                 }
+                if (player2Connect) {
+                    return registeredPlayers.get(1).getReference();
 
+                }
             }
         }
 
-        winner = checkAndResetCounter(playerConnections);
+        thisLogger.info("Checking diagonals (SW-NE)...");
+        //Check Diagonals (SW-NE)
+        for (int rows = 0; rows < boardHeight - maxConnections - 1; rows++) {
+            for (int columns = 0; columns < boardWidth - maxConnections - 1; columns++) {
+                boolean player1Connect = true, player2Connect = true;
 
-        return winner;
+                for (int o = 0; o < maxConnections; o++) {
+
+                    if (player1Connect
+                            && !Objects.equals(boardData[columns + o][rows + o], registeredPlayers.get(0).getPlayerChip())) {
+                        player1Connect = false;
+
+                    }
+                    if (player2Connect
+                            && !Objects.equals(boardData[columns + o][rows + o], registeredPlayers.get(1).getPlayerChip())) {
+                        player2Connect = false;
+
+                    }
+                }
+
+                if (player1Connect) {
+                    return registeredPlayers.get(0).getReference();
+
+                }
+                if (player2Connect) {
+                    return registeredPlayers.get(1).getReference();
+
+                }
+            }
+        }
+
+        thisLogger.info("Checking diagonals (NE-SW)...");
+        //Check Diagonals (NE-SW)
+        for (int rows = 0;
+                rows < boardHeight - maxConnections - 1; rows++) {
+            for (int columns = maxConnections - 1; columns < boardWidth; columns++) {
+                boolean player1Connect = true, player2Connect = true;
+
+                for (int o = 0; o < maxConnections; o++) {
+
+                    if (player1Connect
+                            && !Objects.equals(boardData[columns - o][rows + o], registeredPlayers.get(0).getPlayerChip())) {
+                        player1Connect = false;
+
+                    }
+                    if (player2Connect
+                            && !Objects.equals(boardData[columns - o][rows + o], registeredPlayers.get(1).getPlayerChip())) {
+                        player2Connect = false;
+
+                    }
+                }
+
+                if (player1Connect) {
+                    return registeredPlayers.get(0).getReference();
+
+                }
+                if (player2Connect) {
+                    return registeredPlayers.get(1).getReference();
+
+                }
+            }
+        }
+
+        return null;
+
     }
 
     @Override
     public void registerPlayer(Player player) throws MaxPlayerRegisteredException {
-        if (nrPlayersJoined <= getMaxPlayers()) {
+        if (nrPlayersJoined < getMaxPlayers()) {
             nrPlayersJoined++;
             addPlayer(player);
         } else {
@@ -195,39 +218,40 @@ public class ConnectNBoard extends GameObject implements Board {
     }
 
     @Override
-    public int getMaxPlayers() {
+    public Integer getMaxPlayers() {
         return maxPlayers;
     }
 
-    private boolean checkIfLegalMove(int column) {
+    private boolean checkIfLegalMove(Integer column) {
+        thisLogger.log(Level.INFO, "Checking if {0} has a legal move", column);
         if (column > getWidth()) {
             throw new IllegalMoveException();
         }
         return true;
     }
 
-    private Player checkAndResetCounter(Map<Player, Integer> playerConnections) {
-        for (Player player : getRegisteredPlayers()) {
-            if (playerConnections.containsKey(player) && playerConnections.get(player) == maxConnections) {
-                // bingo! there is a winner
-                return player;
-            }
-            playerConnections.put(player, 0);
-        }
-        return null;
-    }
-
     @Override
-    public String moveBoardPiece(Player player, int column) throws ColumnFilledException {
+    public String placeChipOnBoard(String playerRef, Integer column) throws ColumnFilledException {
 
-        if (!getRegisteredPlayers().contains(player)) {
-            throw new PlayerNotRegisteredException("player: " + player.getReference() + " is not registered with this board.");
+        Player playerToMove = null;
+        for (Player player : getRegisteredPlayers()) {
+            if (player.getReference().equals(playerRef)) {
+                playerToMove = player;
+            }
         }
-        BoardChip playerChip = player.getPlayerChip();
+
+        if (playerToMove == null) {
+            throw new PlayerNotRegisteredException("player: " + playerRef + " is not registered with this board.");
+        }
+        BoardChip playerChip = playerToMove.getPlayerChip();
         String chipPlace = null;
         if (checkIfLegalMove(column)) {
+            thisLogger.log(Level.INFO, "placing a chip on column: {0}", column);
             chipPlace = placeBoardChip(playerChip, column);
+            printgrid();
             GameStatus currentGameStatus = getCurrentGameStatus();
+            thisLogger.log(Level.INFO, "Game Status: {0}", currentGameStatus);
+
             if (!currentGameStatus.equals(GameStatus.GAME_IN_PROGRESS)) {
                 throw new GameFinished(currentGameStatus, chipPlace);
             }
@@ -243,6 +267,7 @@ public class ConnectNBoard extends GameObject implements Board {
     public GameStatus getCurrentGameStatus() {
         this.winningPlayer = checkforConnect4();
         if (this.winningPlayer != null) {
+            thisLogger.log(Level.INFO, "Winning player: {0}", winningPlayer);
             return GameStatus.GAME_ENDED;
         } else {
             if (isBoardFull()) {
@@ -252,8 +277,8 @@ public class ConnectNBoard extends GameObject implements Board {
         return GameStatus.GAME_IN_PROGRESS;
     }
 
-    public String placeBoardChip(BoardChip playerChip, int column) throws ColumnFilledException {
-        for (int y = 0; y <= getHeight(); y++) {
+    public String placeBoardChip(BoardChip playerChip, Integer column) throws ColumnFilledException {
+        for (Integer y = 0; y <= getHeight(); y++) {
             if (boardData[column][y] == null) {
                 boardData[column][y] = playerChip;
                 return "column: " + column + ", position: " + y;
@@ -263,18 +288,18 @@ public class ConnectNBoard extends GameObject implements Board {
     }
 
     @Override
-    public int getHeight() {
+    public Integer getHeight() {
         return this.boardHeight;
     }
 
     @Override
-    public int getWidth() {
+    public Integer getWidth() {
         return this.boardWidth;
     }
 
     @Override
-    public Player getWinner() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getWinner() {
+        return this.winningPlayer;
     }
 
     @Override
@@ -282,51 +307,79 @@ public class ConnectNBoard extends GameObject implements Board {
         return Collections.unmodifiableList(this.registeredPlayers);
     }
 
-    public int getBoardWidth() {
+    public Integer getBoardWidth() {
         return boardWidth;
     }
 
-    public void setBoardWidth(int boardWidth) {
+    public void setBoardWidth(Integer boardWidth) {
         this.boardWidth = boardWidth;
     }
 
-    public int getBoardHeight() {
+    public Integer getBoardHeight() {
         return boardHeight;
     }
 
-    public void setBoardHeight(int boardHeight) {
+    public void setBoardHeight(Integer boardHeight) {
         this.boardHeight = boardHeight;
     }
 
-    public int getMaxConnections() {
+    public Integer getMaxConnections() {
         return maxConnections;
     }
 
-    public void setMaxConnections(int maxConnections) {
+    public void setMaxConnections(Integer maxConnections) {
         this.maxConnections = maxConnections;
-    }
-
-    public BoardChip[][] getBoardData() {
-        return boardData;
     }
 
     public void setBoardData(BoardChip[][] boardData) {
         this.boardData = boardData;
     }
 
-    public int getNrPlayersJoined() {
+    public Integer getNrPlayersJoined() {
         return nrPlayersJoined;
     }
 
-    public void setNrPlayersJoined(int nrPlayersJoined) {
+    public void setNrPlayersJoined(Integer nrPlayersJoined) {
         this.nrPlayersJoined = nrPlayersJoined;
     }
 
-    public Player getWinningPlayer() {
+    public void printgrid() {
+        StringBuilder board = new StringBuilder();
+        for (int rows = boardHeight - 1; rows >= 0; rows--) {
+            board.append("row: ").append(rows + 1).append("|\t");
+            for (int columns = 0; columns < boardWidth; columns++) {
+                BoardChip chip = boardData[columns][rows];
+                if (chip != null) {
+                    for (Player player : getRegisteredPlayers()) {
+                        if (chip.equals(player.getPlayerChip())) {
+                            board.append("[").append(chip.getChipColor()).append("]");
+                        }
+                    }
+
+                } else {
+                    board.append("[.]");
+                }
+                board.append("\t\t");
+            }
+            board.append("\n");
+        }
+
+        thisLogger.log(Level.INFO, "Board:: \n{0}", board.toString());
+    }
+
+    public String getWinningPlayer() {
         return winningPlayer;
     }
 
-    public void setWinningPlayer(Player winningPlayer) {
+    public void setWinningPlayer(String winningPlayer) {
         this.winningPlayer = winningPlayer;
+    }
+
+    public String getTestString() {
+        return testString;
+    }
+
+    public void setTestString(String testString) {
+        this.testString = testString;
     }
 }

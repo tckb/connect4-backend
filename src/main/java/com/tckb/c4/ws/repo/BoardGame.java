@@ -11,55 +11,56 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  *
  * @author tckb
  */
-@Document(collection = "GameBoard")
-public class BoardGame extends GameObject {
+@Document
+public class BoardGame implements GameObject {
 
     @Indexed
     @Id
-    @Field(value = "game_ref")
-    private String playerRef;
+    private String id;
 
-    @Field(value = "game_board")
-    private Board board;
+    private Board gameBoard;
 
-    @Field(value = "game_session_id")
-    private String boardRef;
+    private String gameSessionId;
 
     @PersistenceConstructor
-    public BoardGame(String playerRef, Board board, String boardRef) {
-        this.playerRef = playerRef;
-        this.board = board;
-        this.boardRef = boardRef;
+    public BoardGame(String id, Board gameBoard, String gameSessionId) {
+        this.id = id;
+        this.gameBoard = gameBoard;
+        this.gameSessionId = gameSessionId;
     }
 
-    public String getPlayerRef() {
-        return playerRef;
+    public String getId() {
+        return id;
     }
 
-    public void setPlayerRef(String playerRef) {
-        this.playerRef = playerRef;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public Board getBoard() {
-        return board;
+    public Board getGameBoard() {
+        return gameBoard;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
+    public void setGameBoard(Board gameBoard) {
+        this.gameBoard = gameBoard;
     }
 
-    public String getBoardRef() {
-        return boardRef;
+    public String getGameSessionId() {
+        return gameSessionId;
     }
 
-    public void setBoardRef(String boardRef) {
-        this.boardRef = boardRef;
+    public void setGameSessionId(String gameSessionId) {
+        this.gameSessionId = gameSessionId;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + this.id + ":" + this.gameSessionId + "}";
     }
 
 }

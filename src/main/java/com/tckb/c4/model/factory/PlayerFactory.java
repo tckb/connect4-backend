@@ -10,8 +10,8 @@ import com.tckb.c4.model.concrete.HumanPlayer;
 import com.tckb.c4.model.intf.BoardChip;
 import com.tckb.c4.model.intf.GameObject;
 import com.tckb.c4.model.intf.GameObjectType;
-import com.tckb.c4.model.intf.GameObjectType;
 import java.util.Random;
+import javafx.scene.paint.Color;
 
 /**
  * A factory for creating connect4 players
@@ -23,29 +23,20 @@ public class PlayerFactory extends AbstractGameFactory {
     @Override
     public GameObject createInstance(GameObjectType type, Object... params) {
         if (type instanceof PlayerType) {
+
             /**
              * create a random colored chip for the player
              */
-            BoardChip randomChip = new BoardChip() {
-
-                @Override
-                public String getColor() {
-                    return BoardChip.CHIP_COLORS[new Random().nextInt(BoardChip.CHIP_COLORS.length)];
-                }
-            };
+            BoardChip randomChip = new BoardChip(Color.color(new Random().nextDouble(), new Random().nextDouble(), new Random().nextDouble()).toString());
 
             switch ((PlayerType) type) {
 
                 case Human:
-                    HumanPlayer player = new HumanPlayer((String) params[0]);
-                    player.setChip(randomChip);
-
-                    return player;
+                    HumanPlayer humanPlayer = new HumanPlayer((String) params[0], randomChip);
+                    return humanPlayer;
 
                 case AI:
-                    AiPlayer aiPlayer = new AiPlayer("aiPlayer");
-                    aiPlayer.setChip(randomChip);
-                    return aiPlayer;
+                    return new AiPlayer("aiPlayer", randomChip);
             }
         }
 

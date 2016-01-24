@@ -5,17 +5,14 @@
  */
 package com.tckb.c4.ws.repo;
 
-import com.tckb.c4.model.intf.GameObject;
-import java.io.Serializable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
- * A generic game repository for storing all game related information
- * <p>
+ *
  * @author tckb
- * @param <T>
- * @param <V>
  */
-public interface GameRepository<T extends GameObject, V extends Serializable> extends MongoRepository<T, V> {
+public interface BoardGameRepository extends MongoRepository<BoardGame, String> {
+
+    public BoardGame findByGameSessionId(String gameSessionId);
 
 }

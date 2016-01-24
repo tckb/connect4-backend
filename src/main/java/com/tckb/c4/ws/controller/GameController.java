@@ -5,13 +5,15 @@
  */
 package com.tckb.c4.ws.controller;
 
+import com.tckb.c4.model.exception.GameException.ColumnFilledException;
+import com.tckb.c4.model.exception.GameException.GameFinished;
+import com.tckb.c4.model.exception.GameException.GameNotSetupException;
+import com.tckb.c4.model.exception.GameException.IllegalMoveException;
+import com.tckb.c4.model.exception.GameException.InvalidGameSessionException;
+import com.tckb.c4.model.exception.GameException.MaxPlayerRegisteredException;
+import com.tckb.c4.model.exception.GameException.PlayerNotRegisteredException;
 import com.tckb.c4.model.intf.Board.GameStatus;
-import com.tckb.c4.model.exception.ColumnFilledException;
-import com.tckb.c4.model.exception.GameFinished;
-import com.tckb.c4.model.exception.IllegalMoveException;
-import com.tckb.c4.model.exception.PlayerNotRegisteredException;
 import com.tckb.c4.ws.BoardConfiguration;
-import com.tckb.c4.model.exception.GameNotSetupException;
 import com.tckb.c4.ws.WebServiceResponse;
 import com.tckb.c4.ws.impl.GameServiceImpl;
 import java.text.MessageFormat;
@@ -68,9 +70,9 @@ public class GameController {
             @RequestParam(required = false, defaultValue = "false", name = "multi_player") boolean multiPlayer) {
         WebServiceResponse welcomeResponse = new WebServiceResponse();
 
-        thisLogger.log(Level.INFO, "New game request with session id: {0}", thisSession.getId());
+        thisLogger.log(Level.INFO, "Start game request with ref: {0}", thisSession.getId());
 
-        boolean isRegistered = gameService.isPlayerAlreadyRegistered(thisSession.getId());
+        boolean isRegistered = gameService.checkIfRegisteredByRef(thisSession.getId());
 
         try {
             if (!isRegistered) {
@@ -115,9 +117,34 @@ public class GameController {
 
     @RequestMapping("/join")
     public WebServiceResponse joinGame(HttpSession thisSession, @RequestParam(required = true, name = "session") String boardSessionId) {
-        WebServiceResponse hello = new WebServiceResponse();
-        hello.getResponseMetaData().success();
-        return hello;
+        WebServiceResponse response = new WebServiceResponse();
+        boolean alreadyStarted = gameService.checkIfRegisteredByRef(thisSession.getId());
+        boolean alreadyJoined = gameService.checkIfRegisteredBySessionId(boardSessionId, thisSession.getId());
+
+        if (alreadyStarted) {
+            thisLogger.log(Level.INFO, "Ref: {0} aleady started game.", thisSession.getId());
+            response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), "Hey there, you have already started a game. Can not join new game.");
+        } else {
+            if (alreadyJoined) {
+                thisLogger.log(Level.INFO, "Ref: {0} with board session id: {1} already joined game.", new Object[]{thisSession.getId(), boardSessionId});
+
+                response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), "Hey there, you have already joined the game. start placing a move.");
+            } else {
+                thisLogger.log(Level.INFO, "New join request, ref: {0} with board session id: {1} .", new Object[]{thisSession.getId(), boardSessionId});
+
+                try {
+                    String[] gameRefs = gameService.registerAndJoinGame(thisSession.getId(), boardSessionId);
+                    response.getResponseObject().setMessage(newGameMsg);
+                    response.getResponseObject().setChipColor(gameRefs[0]);
+                    response.getResponseObject().setReference(gameRefs[1]);
+                    response.getResponseMetaData().success();
+                } catch (InvalidGameSessionException | MaxPlayerRegisteredException ex) {
+                    response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+                }
+            }
+        }
+
+        return response;
     }
 
     @RequestMapping("/place_chip/{boardColumn}")
@@ -144,7 +171,7 @@ public class GameController {
 
                 if (!ge.getGameStatus().equals(GameStatus.GAME_TIED)) {
                     try {
-                        if (!gameService.isWinningPlayer(playerRef)) {
+                        if (ge.getWiningPlayerRef().equals(playerRef)) {
                             response.getResponseObject().setMessage(aiWinMsg);
                         } else {
                             response.getResponseObject().setMessage(playerWinMsg);

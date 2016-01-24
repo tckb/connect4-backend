@@ -12,17 +12,14 @@ import org.springframework.data.annotation.Id;
  *
  * @author tckb
  */
-public abstract class AbstractPlayer extends GameObject implements Player {
+public abstract class AbstractPlayer implements GameObject, Player {
 
     @Id
-    private final String reference;
-    private BoardChip chip;
+    protected final String reference;
+    protected final BoardChip chip;
 
-    public AbstractPlayer(String reference) {
+    public AbstractPlayer(String reference, BoardChip chip) {
         this.reference = reference;
-    }
-
-    public void setChip(BoardChip chip) {
         this.chip = chip;
     }
 
@@ -34,9 +31,6 @@ public abstract class AbstractPlayer extends GameObject implements Player {
     public String getReference() {
         return this.reference;
     }
-
-    @Override
-    public abstract String placeChipOnBoard(int column);
 
     @Override
     public BoardChip getPlayerChip() {
@@ -64,10 +58,7 @@ public abstract class AbstractPlayer extends GameObject implements Player {
             return false;
         }
         final AbstractPlayer other = (AbstractPlayer) obj;
-        if (!Objects.equals(this.reference, other.reference)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.reference, other.reference);
     }
 
 }

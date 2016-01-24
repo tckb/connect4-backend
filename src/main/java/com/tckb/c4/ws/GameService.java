@@ -5,9 +5,9 @@
  */
 package com.tckb.c4.ws;
 
-import com.tckb.c4.model.exception.GameNotSetupException;
-import com.tckb.c4.model.exception.ColumnFilledException;
-import com.tckb.c4.model.exception.PlayerNotRegisteredException;
+import com.tckb.c4.model.exception.GameException.ColumnFilledException;
+import com.tckb.c4.model.exception.GameException.GameNotSetupException;
+import com.tckb.c4.model.exception.GameException.PlayerNotRegisteredException;
 
 /**
  *
@@ -41,7 +41,7 @@ public interface GameService {
      *
      * @param playerRef
      * @param isMultiplayerGame <p>
-     * @return @throws com.tckb.c4.ws.GameNotSetupException
+     * @return @throws com.tckb.c4.model.exception.GameNotSetupException
      */
     public String[] registerAndStartGame(String playerRef, boolean isMultiplayerGame) throws GameNotSetupException;
 
