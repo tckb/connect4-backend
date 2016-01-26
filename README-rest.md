@@ -1,17 +1,28 @@
+# rest.README #
+The default context path is ```/```
+
 ## Rest API documentation ##
 An overview of the rest api is as follows:
 
 api path  | method | description
 ------------- | -------------| -------------
-/setup  | POST | Content Cell
-/start?[multi_player=```true|false```] |GET| Content Cell
-/join?session=```sessionId```| GET | Content Cell
-/place_chip/{column}/playerRef=```player_ref```&boardSessionId=```sessionId```| GET| Content Cell
-/stats | GET| Content Cell
+/setup  | POST | Used for initial setup of the game *Must be the first call!*
+/start?[multi_player=```true|false``` |GET| Used for starting up the the game. *As an added advantage, the player will get the chance to make the first move.*
+/join?session=```sessionId```| GET | Used for joining a game initiated by another player. *The player must use ```multi_player=true``` for allowing other players to join.*
+/place_chip/```column```/playerRef=```player_ref```&boardSessionId=```sessionId```| GET| Used for placing a chip on the board.
+/stats | GET| Dumps the current stats of the game including current and expired game.
+
+
+#### Rest-params
 
 
 
 # Architecture 
 ![Alt text](./src/main/resources/arch.png)
+
+
+
+
+
 
 
