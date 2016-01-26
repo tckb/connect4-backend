@@ -50,4 +50,4 @@ expired_boards → 0.000MB / 0.008MB
 ```
 Continued more @ [Rest.README](rest).
 
-[app-props.link]: (https://bitbucket.org/tckb/connect4-glueck-games/src/6834e3dcbd1ea0b0676fd8a02c3cb7231697a5b6/src/main/resources/application.properties)
+[app-props.link]: (/src/main/resources/application.properties)
