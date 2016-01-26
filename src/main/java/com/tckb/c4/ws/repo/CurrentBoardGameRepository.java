@@ -9,7 +9,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- *
+ * The repository holding the current boards.
+ * <p>
  * @author tckb
  */
 @Repository

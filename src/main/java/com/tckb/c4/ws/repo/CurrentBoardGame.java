@@ -14,7 +14,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- *
+ * A serializable form of current board.
+ * <p>
  * @author tckb
  */
 @Document(collection = "current_boards")

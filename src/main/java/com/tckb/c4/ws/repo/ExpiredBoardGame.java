@@ -13,7 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- *
+ * A serializable form for storing the expired boards.
+ * <p>
  * @author tckb
  */
 @Document(collection = "expired_boards")

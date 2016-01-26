@@ -74,7 +74,7 @@ public interface Board {
      * @return a string representation of the chip place (column:
      *         <code>column</code>, position: <code>row</code>), such that
      *         <code>1&lt;= row &lt;= {@link  #getHeight()}</code>
-     * <br/>
+     * <br>
      * <p>
      * @throws ColumnFilledException thrown if you try to place on a column
      *                               which is already filled.

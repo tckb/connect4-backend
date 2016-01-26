@@ -22,7 +22,7 @@ public class BoardFactory extends AbstractGameFactory {
     public enum BoardType implements GameObjectType {
 
         /**
-         * Connect-n board, expected params(in-order): <br/>
+         * Connect-n board, expected params(in-order): <br>
          * <code> boardwidth, boardHeight, maxConnections</code>
          * <p>
          */

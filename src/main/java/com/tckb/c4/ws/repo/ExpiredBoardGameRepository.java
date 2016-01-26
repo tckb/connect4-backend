@@ -9,7 +9,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- *
+ * The repository for holding all expired boards.
+ * <p>
  * @author tckb
  */
 @Repository

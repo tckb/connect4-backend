@@ -1,5 +1,6 @@
 package com.tckb.c4.ws.impl;
 
+import com.tckb.c4.ws.GameService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tckb.c4.model.concrete.DumbAiPlayer;
 import com.tckb.c4.model.concrete.HumanPlayer;
@@ -36,7 +37,7 @@ import org.springframework.stereotype.Service;
  * @author tckb
  */
 @Service
-public class GameServiceImpl {
+public class GameServiceImpl implements GameService {
 
     @Autowired
     private CurrentBoardGameRepository currentRepo;
@@ -57,6 +58,7 @@ public class GameServiceImpl {
      * <p>
      * @throws GameNotSetupException if the game is not setup previously setup.
      */
+    @Override
     public String[] createNewGameSession(boolean isMultiplayerGame) throws GameNotSetupException {
         try {
 
@@ -102,6 +104,7 @@ public class GameServiceImpl {
      * @throws GameException.MaxPlayerRegisteredException if the board is
      *                                                    already full.
      */
+    @Override
     public String[] registerAndJoinGame(String gameSessionId) throws GameException.InvalidGameSessionException, GameException.MaxPlayerRegisteredException {
 
         CurrentBoardGame playerBoard = currentRepo.findOne(gameSessionId);
@@ -144,6 +147,7 @@ public class GameServiceImpl {
      * @throws GameException.ColumnFilledException
      * @throws GameException.InvalidGameSessionException
      */
+    @Override
     public String[] placeBoardPiece(String gameSessionId, String playerRef, String boardColumn) throws PlayerNotRegisteredException, ColumnFilledException, InvalidGameSessionException {
         CurrentBoardGame playerBoard = currentRepo.findOne(gameSessionId);
         if (playerBoard != null) {
@@ -221,6 +225,7 @@ public class GameServiceImpl {
      * <p>
      * @return game board stats
      */
+    @Override
     public GameOverAllStats getOverallGameStats() {
         return new GameOverAllStats(currentRepo.findAll(), expiredRepo.findAll());
     }
@@ -230,6 +235,7 @@ public class GameServiceImpl {
      * <p>
      * @param configRequst
      */
+    @Override
     public void setupBoard(BoardConfiguration configRequst) {
         if (configRequst != null) {
             this.boardConfig = configRequst;

@@ -49,7 +49,7 @@ public class PlayerFactory extends AbstractGameFactory {
     public enum PlayerType implements GameObjectType {
 
         /**
-         * Human player. expected param(in-order): <br/>
+         * Human player. expected param(in-order): <br>
          * <code>player-reference</code>
          * <p>
          */

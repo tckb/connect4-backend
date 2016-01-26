@@ -13,8 +13,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * A generic game repository for storing all game related information
  * <p>
  * @author tckb
- * @param <T>
- * @param <V>
+ * @param <T> data to be stored.
+ * @param <V> key for mapping the data.
  */
 public interface GameRepository<T extends GameObject, V extends Serializable> extends MongoRepository<T, V> {
 

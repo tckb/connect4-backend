@@ -14,8 +14,8 @@ import com.tckb.c4.model.exception.GameException.MaxPlayerRegisteredException;
 import com.tckb.c4.model.exception.GameException.PlayerNotRegisteredException;
 import com.tckb.c4.model.intf.Board.GameStatus;
 import com.tckb.c4.ws.BoardConfiguration;
+import com.tckb.c4.ws.GameService;
 import com.tckb.c4.ws.WebServiceResponse;
-import com.tckb.c4.ws.impl.GameServiceImpl;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -61,7 +61,7 @@ public class GameController {
     private String invalidPlayerRefMsg;
 
     @Autowired
-    private GameServiceImpl gameService;
+    private GameService gameService;
 
     protected static final Logger thisLogger = Logger.getLogger(GameController.class.getName());
 

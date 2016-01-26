@@ -120,22 +120,18 @@ public class WebServiceResponse {
         /**
          * Initialize response meta data
          * <p>
-         * @param status
+         * @param wsStatus
          * @param successMessage
          * @param errorMessage
          */
-        public ResponseMetaData(WebServiceStatuses status, String successMessage, String errorMessage) {
-            this.status = status.name();
+        public ResponseMetaData(WebServiceStatuses wsStatus, String successMessage, String errorMessage) {
+            this.status = wsStatus.name();
             this.successMessage = successMessage;
             this.errorMessage = errorMessage;
         }
 
         public String getStatus() {
             return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
         }
 
         public void setStatus(WebServiceStatuses webServiceStatuses) {

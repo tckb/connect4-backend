@@ -45,7 +45,7 @@ public interface Player extends Comparable<Player> {
 
     /**
      * Places a chip on board by human player.
-     * <br/>
+     * <br>
      * NB: Not to be used for ai player, else this will raise
      * {@link IllegalMoveException}
      * <p>
