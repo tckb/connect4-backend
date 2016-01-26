@@ -17,9 +17,9 @@ import com.tckb.c4.ws.BoardConfiguration;
 import com.tckb.c4.ws.WebServiceResponse;
 import com.tckb.c4.ws.impl.GameServiceImpl;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,36 +66,17 @@ public class GameController {
     protected static final Logger thisLogger = Logger.getLogger(GameController.class.getName());
 
     @RequestMapping("/start")
-    public WebServiceResponse startGame(HttpSession thisSession,
-            @RequestParam(required = false, defaultValue = "false", name = "multi_player") boolean multiPlayer) {
+    public WebServiceResponse startGame(@RequestParam(required = false, defaultValue = "false", name = "multi_player") boolean multiPlayer) {
         WebServiceResponse welcomeResponse = new WebServiceResponse();
 
-        thisLogger.log(Level.INFO, "Start game request with ref: {0}", thisSession.getId());
-
-        boolean isRegistered = gameService.checkIfRegisteredByRef(thisSession.getId());
-
         try {
-            if (!isRegistered) {
-                String[] gameRefs = gameService.registerAndStartGame(thisSession.getId(), multiPlayer);
-
-                welcomeResponse.getResponseObject().setMessage(newGameMsg);
-                welcomeResponse.getResponseObject().setChipColor(gameRefs[0]);
-                welcomeResponse.getResponseObject().setBoardSession(gameRefs[1]);
-
-            } else {
-
-                String boardSession = gameService.getBoardSession(thisSession.getId());
-
-                if (boardSession != null) {
-                    welcomeResponse.getResponseObject().setMessage(oldGameMsg);
-                    welcomeResponse.getResponseObject().setBoardSession(boardSession);
-                } else {
-                    // seems like session expired!
-                }
-
-            }
+            String[] gameRefs = gameService.createNewGameSession(multiPlayer);
+            thisLogger.log(Level.INFO, "Start game request with refs: {0}", Arrays.toString(gameRefs));
+            welcomeResponse.getResponseObject().setBoardSession(gameRefs[0]);
+            welcomeResponse.getResponseObject().setPlayerRef(gameRefs[1]);
+            welcomeResponse.getResponseObject().setChipColor(gameRefs[2]);
+            welcomeResponse.getResponseObject().setMessage(newGameMsg);
             welcomeResponse.getResponseMetaData().success();
-            welcomeResponse.getResponseObject().setReference(thisSession.getId());
 
         } catch (GameNotSetupException ex) {
             welcomeResponse.getResponseMetaData().failure(HttpStatus.FORBIDDEN.value(), ex.getMessage());
@@ -116,32 +97,20 @@ public class GameController {
     }
 
     @RequestMapping("/join")
-    public WebServiceResponse joinGame(HttpSession thisSession, @RequestParam(required = true, name = "session") String boardSessionId) {
+    public WebServiceResponse joinGame(@RequestParam(required = true, name = "session") String boardSessionId) {
         WebServiceResponse response = new WebServiceResponse();
-        boolean alreadyStarted = gameService.checkIfRegisteredByRef(thisSession.getId());
-        boolean alreadyJoined = gameService.checkIfRegisteredBySessionId(boardSessionId, thisSession.getId());
 
-        if (alreadyStarted) {
-            thisLogger.log(Level.INFO, "Ref: {0} aleady started game.", thisSession.getId());
-            response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), "Hey there, you have already started a game. Can not join new game.");
-        } else {
-            if (alreadyJoined) {
-                thisLogger.log(Level.INFO, "Ref: {0} with board session id: {1} already joined game.", new Object[]{thisSession.getId(), boardSessionId});
+        thisLogger.log(Level.INFO, "New join request, ref: {0} with board session id: {1} .", new Object[]{boardSessionId});
 
-                response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), "Hey there, you have already joined the game. start placing a move.");
-            } else {
-                thisLogger.log(Level.INFO, "New join request, ref: {0} with board session id: {1} .", new Object[]{thisSession.getId(), boardSessionId});
-
-                try {
-                    String[] gameRefs = gameService.registerAndJoinGame(thisSession.getId(), boardSessionId);
-                    response.getResponseObject().setMessage(newGameMsg);
-                    response.getResponseObject().setChipColor(gameRefs[0]);
-                    response.getResponseObject().setReference(gameRefs[1]);
-                    response.getResponseMetaData().success();
-                } catch (InvalidGameSessionException | MaxPlayerRegisteredException ex) {
-                    response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-                }
-            }
+        try {
+            String[] gameRefs = gameService.registerAndJoinGame(boardSessionId);
+            response.getResponseObject().setMessage(newGameMsg);
+            response.getResponseObject().setBoardSession(gameRefs[0]);
+            response.getResponseObject().setPlayerRef(gameRefs[1]);
+            response.getResponseObject().setChipColor(gameRefs[2]);
+            response.getResponseMetaData().success();
+        } catch (InvalidGameSessionException | MaxPlayerRegisteredException ex) {
+            response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         }
 
         return response;
@@ -149,30 +118,31 @@ public class GameController {
 
     @RequestMapping("/place_chip/{boardColumn}")
     public WebServiceResponse placeChip(@PathVariable String boardColumn,
-            @RequestParam(required = true) String playerRef, HttpSession thisSession) {
+            @RequestParam(required = true) String playerRef, @RequestParam(required = true) String boardSessionId) {
         WebServiceResponse response = new WebServiceResponse();
-        if (playerRef.isEmpty()) {
+        if (playerRef.isEmpty() || boardSessionId.isEmpty()) {
             response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), invalidPlayerRefMsg);
         } else {
             try {
-                String[] boardMoves = gameService.placeBoardPiece(playerRef, boardColumn);
+                String[] boardMoves = gameService.placeBoardPiece(boardSessionId, playerRef, boardColumn);
 
-                if (boardMoves != null && boardMoves.length == 2) {
+                if (boardMoves != null && boardMoves.length >= 3) {
                     response.getResponseObject().setHumanTurn(boardMoves[0]);
                     response.getResponseObject().setAiTurn(boardMoves[1]);
+                    response.getResponseObject().setBoardData(boardMoves[2]);
                     response.getResponseObject().setGameStatus(GameStatus.GAME_IN_PROGRESS);
                     response.getResponseMetaData().success();
                 } else {
                     response.getResponseMetaData().failure(HttpStatus.FORBIDDEN.value(), "Sorry, I'm still waiting for other players to join.");
                 }
             } catch (GameFinished ge) {
-                thisSession.invalidate();
                 response.getResponseObject().setGameStatus(ge.getGameStatus());
-
                 if (!ge.getGameStatus().equals(GameStatus.GAME_TIED)) {
                     try {
-                        if (ge.getWiningPlayerRef().equals(playerRef)) {
+                        if (ge.getWinningMove().equals(playerRef)) {
                             response.getResponseObject().setMessage(aiWinMsg);
+                            response.getResponseObject().setBoardData(ge.getBoardData());
+
                         } else {
                             response.getResponseObject().setMessage(playerWinMsg);
                         }
@@ -182,15 +152,12 @@ public class GameController {
                 } else {
                     response.getResponseObject().setMessage(gameTieMsg);
                 }
-
                 response.getResponseMetaData().success();
 
-            } catch (IllegalMoveException e) {
-                response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), MessageFormat.format(invalidMoveMsg, boardColumn));
+            } catch (IllegalMoveException | InvalidGameSessionException | PlayerNotRegisteredException e) {
+                response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), e.getMessage());
             } catch (ColumnFilledException e) {
                 response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), MessageFormat.format(invalidMoveColumnMsg, boardColumn));
-            } catch (PlayerNotRegisteredException e) {
-                response.getResponseMetaData().failure(HttpStatus.BAD_REQUEST.value(), invalidPlayerMsg);
             }
         }
         return response;

@@ -6,13 +6,15 @@
 package com.tckb.c4.ws.repo;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author tckb
  */
-public interface BoardGameRepository extends MongoRepository<BoardGame, String> {
+@Repository
+public interface CurrentBoardGameRepository extends MongoRepository<CurrentBoardGame, String> {
 
-    public BoardGame findByGameSessionId(String gameSessionId);
+    public CurrentBoardGame findByGameSessionId(String gameSessionId);
 
 }

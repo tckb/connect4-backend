@@ -22,23 +22,26 @@ public interface Player extends Comparable<Player> {
     public BoardChip getPlayerChip();
 
     /**
+     * Return some reference to this player.
+     * <p>
+     * @return
+     */
+    public String getReference();
+
+    /**
      * Place a chip on the board by AI.
      * <p>
      * NB: Not to be used for human player, else this will raise
      * {@link IllegalMoveException}
      * <p>
      * <p>
+     * @param gameBoard <p>
      * @return chip placement on the board.
      * <p>
      * @see PlayerType#AI
      */
-    public int autoPlaceChipColumn();
+    public String placeChipOnBoard(Board gameBoard);
 
-    /**
-     * Return some reference to this player.
-     * <p>
-     * @return
-     */
-    public String getReference();
+    public String placeChipOnBoard(Board gameBoard, int column);
 
 }

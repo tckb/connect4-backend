@@ -7,6 +7,7 @@ package com.tckb.c4.model.concrete;
 
 import com.tckb.c4.model.exception.GameException.IllegalMoveException;
 import com.tckb.c4.model.intf.AbstractPlayer;
+import com.tckb.c4.model.intf.Board;
 import com.tckb.c4.model.intf.BoardChip;
 
 /**
@@ -20,8 +21,13 @@ public class HumanPlayer extends AbstractPlayer {
     }
 
     @Override
-    public int autoPlaceChipColumn() {
+    public String placeChipOnBoard(Board gameBoard) {
         throw new IllegalMoveException();
+    }
+
+    @Override
+    public String placeChipOnBoard(Board gameBoard, int column) {
+        return gameBoard.placeChipOnBoard(super.reference, column);
     }
 
 }

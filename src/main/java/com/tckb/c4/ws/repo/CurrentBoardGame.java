@@ -11,35 +11,31 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  *
  * @author tckb
  */
-@Document
-public class BoardGame implements GameObject {
+@Document(collection = "current_boards")
+public class CurrentBoardGame implements GameObject {
 
     @Indexed
     @Id
-    private String id;
-
-    private Board gameBoard;
-
+    @Field("game_session_id")
     private String gameSessionId;
 
+    @Field("game_board")
+    private Board gameBoard;
+
+    @Field("next_turn")
+    private String nextTurn;
+
     @PersistenceConstructor
-    public BoardGame(String id, Board gameBoard, String gameSessionId) {
-        this.id = id;
+    public CurrentBoardGame(String gameSessionId, Board gameBoard, String nextTurn) {
         this.gameBoard = gameBoard;
         this.gameSessionId = gameSessionId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        this.nextTurn = nextTurn;
     }
 
     public Board getGameBoard() {
@@ -60,7 +56,15 @@ public class BoardGame implements GameObject {
 
     @Override
     public String toString() {
-        return "{" + this.id + ":" + this.gameSessionId + "}";
+        return "{" + this.gameSessionId + "}";
+    }
+
+    public String getNextTurn() {
+        return nextTurn;
+    }
+
+    public void setNextTurn(String nextTurn) {
+        this.nextTurn = nextTurn;
     }
 
 }

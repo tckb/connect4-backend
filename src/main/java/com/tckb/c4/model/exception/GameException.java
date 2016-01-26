@@ -46,18 +46,30 @@ public interface GameException {
     class GameFinished extends RuntimeException {
 
         private final Board.GameStatus gameStatus;
+        private final String winningMove;
         private final String winningPlayerRef;
+        private final String boardData;
 
-        public GameFinished(Board.GameStatus status, String winningPlayerRef) {
+        public GameFinished(Board.GameStatus status, String winningPlayerRef, String winningMove, String boardData) {
             this.gameStatus = status;
             this.winningPlayerRef = winningPlayerRef;
+            this.winningMove = winningMove;
+            this.boardData = boardData;
         }
 
         public Board.GameStatus getGameStatus() {
             return gameStatus;
         }
 
-        public String getWiningPlayerRef() {
+        public String getWinningMove() {
+            return winningMove;
+        }
+
+        public String getBoardData() {
+            return boardData;
+        }
+
+        public String getWinningPlayerRef() {
             return winningPlayerRef;
         }
 

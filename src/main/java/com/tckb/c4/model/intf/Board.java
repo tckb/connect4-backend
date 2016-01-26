@@ -17,6 +17,14 @@ import java.util.List;
  */
 public interface Board {
 
+    public String printBoardStatus();
+
+    /**
+     *
+     * @return
+     */
+    public String[][] getBoardData();
+
     /**
      * Game finished status: One of
      * <p>

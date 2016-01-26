@@ -220,6 +220,8 @@ public class WebServiceResponse {
         private String playerChipColor;
         @JsonProperty(value = "board_session")
         private String boardSession;
+        @JsonProperty(value = "board_grid")
+        private String boardData;
 
         public String getHumanTurn() {
             return humanTurn;
@@ -257,7 +259,7 @@ public class WebServiceResponse {
             return reference;
         }
 
-        public void setReference(String reference) {
+        public void setPlayerRef(String reference) {
             this.reference = reference;
         }
 
@@ -287,6 +289,14 @@ public class WebServiceResponse {
 
         public void setBoardSession(String boardSession) {
             this.boardSession = boardSession;
+        }
+
+        public String getBoardData() {
+            return boardData;
+        }
+
+        public void setBoardData(String boardData) {
+            this.boardData = boardData;
         }
 
     }

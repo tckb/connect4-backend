@@ -5,7 +5,9 @@
  */
 package com.tckb.c4.model.concrete;
 
+import com.tckb.c4.model.exception.GameException.IllegalMoveException;
 import com.tckb.c4.model.intf.AbstractPlayer;
+import com.tckb.c4.model.intf.Board;
 import com.tckb.c4.model.intf.BoardChip;
 import java.util.Random;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,13 +23,18 @@ public class AiPlayer extends AbstractPlayer {
         super(reference, chip);
     }
 
-    private int getNextStrategicMove() {
-        return new Random().nextInt(7);
+    private int getNextStrategicMove(Board gameBoard) {
+        return new Random().nextInt(gameBoard.getWidth());
     }
 
     @Override
-    public int autoPlaceChipColumn() {
-        return getNextStrategicMove();
+    public String placeChipOnBoard(Board gameBoard) {
+        return gameBoard.placeChipOnBoard(super.reference, getNextStrategicMove(gameBoard));
+    }
+
+    @Override
+    public String placeChipOnBoard(Board gameBoard, int column) {
+        throw new IllegalMoveException();
     }
 
 }
