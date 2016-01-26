@@ -18,6 +18,8 @@ The recommended configurations for building from the source:
 * Maven 3.2.*
 * git 2.4.*
 
+
+------
 ##### Downloading and Building
 
 ```
