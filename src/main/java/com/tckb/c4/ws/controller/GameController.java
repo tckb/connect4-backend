@@ -127,9 +127,10 @@ public class GameController {
                 String[] boardMoves = gameService.placeBoardPiece(boardSessionId, playerRef, boardColumn);
 
                 if (boardMoves != null && boardMoves.length >= 3) {
-                    response.getResponseObject().setHumanTurn(boardMoves[0]);
-                    response.getResponseObject().setAiTurn(boardMoves[1]);
-                    response.getResponseObject().setBoardData(boardMoves[2]);
+                    response.getResponseObject().setYourTurn(boardMoves[0]);
+                    response.getResponseObject().setOpponentTurn(boardMoves[1]);
+                    response.getResponseObject().setChipColor(boardMoves[2]);
+                    response.getResponseObject().setBoardData(boardMoves[3]);
                     response.getResponseObject().setGameStatus(GameStatus.GAME_IN_PROGRESS);
                     response.getResponseMetaData().success();
                 } else {

@@ -204,9 +204,9 @@ public class WebServiceResponse {
     @JsonInclude(Include.NON_NULL)
     public class ServerResponse {
 
-        @JsonProperty(value = "your_move")
+        @JsonProperty(value = "your_current_move")
         private String humanTurn;
-        @JsonProperty(value = "computer_move")
+        @JsonProperty(value = "opponent_last_move")
         private String aiTurn;
         @JsonProperty(value = "game_status")
         private GameStatus gameStatus;
@@ -216,7 +216,7 @@ public class WebServiceResponse {
         private String reference;
         @JsonProperty(value = "active_players")
         private String activePlayers;
-        @JsonProperty(value = "chip_color")
+        @JsonProperty(value = "your_chip")
         private String playerChipColor;
         @JsonProperty(value = "board_session")
         private String boardSession;
@@ -227,7 +227,7 @@ public class WebServiceResponse {
             return humanTurn;
         }
 
-        public void setHumanTurn(String humanTurn) {
+        public void setYourTurn(String humanTurn) {
             this.humanTurn = humanTurn;
         }
 
@@ -235,7 +235,7 @@ public class WebServiceResponse {
             return aiTurn;
         }
 
-        public void setAiTurn(String aiTurn) {
+        public void setOpponentTurn(String aiTurn) {
             this.aiTurn = aiTurn;
         }
 

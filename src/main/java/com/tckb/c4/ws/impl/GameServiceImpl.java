@@ -159,6 +159,7 @@ public class GameServiceImpl {
                         thisLogger.log(Level.INFO, "Human player chip: {0}", chip1);
 
                         if (chip1 != null) {
+
                             String chip2 = null;
                             for (Player otherPlayer : otherPlayers) {
                                 if (otherPlayer instanceof AiPlayer) {
@@ -168,13 +169,15 @@ public class GameServiceImpl {
                                 }
                                 if (otherPlayer instanceof HumanPlayer) {
                                     playerBoard.setNextTurn(otherPlayer.getReference());
+                                    chip2 = playerBoard.getPreviousMove();
                                 }
                             }
+                            playerBoard.setCurrentMove(chip1);
 
                             // update the game board
                             playerBoard.setGameBoard(gameBoard);
                             currentRepo.save(playerBoard);
-                            return new String[]{chip1, chip2, gameBoard.printBoardStatus()};
+                            return new String[]{chip1, chip2, playerMakingTheMove.getPlayerChip().getChipColor(), gameBoard.printBoardStatus()};
 
                         } else {
                             throw new ColumnFilledException();
@@ -192,7 +195,7 @@ public class GameServiceImpl {
         } else {
             String errorMsg;
             ExpiredBoardGame expiredBoard = expiredRepo.findOne(gameSessionId);
-            errorMsg = (expiredBoard != null) ? "Oh-oh! player: " + expiredBoard.getWinningPlayerRef() + " already won the game with move: " + expiredBoard.getWinningMove() + " :-/ wanna bet another one?"
+            errorMsg = (expiredBoard != null) ? "Oh-oh! player: " + expiredBoard.getWinningPlayerRef() + " already won the game with move: '" + expiredBoard.getWinningMove() + "' :-/ wanna bet another one?"
                     : "Game session does not exist, go ahead and create one, use /start to start the game.";
             throw new InvalidGameSessionException(errorMsg);
         }

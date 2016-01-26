@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  *
@@ -20,12 +21,16 @@ public class ExpiredBoardGame implements GameObject {
 
     @Id
     @Indexed
+    @Field("game_session_id")
     private final String boardSessionId;
 
+    @Field("winning_player_ref")
     private final String winningPlayerRef;
 
+    @Field("winning_board_status")
     private final String winningBoardStatus;
 
+    @Field("winning_move")
     private final String winningMove;
 
     @PersistenceConstructor

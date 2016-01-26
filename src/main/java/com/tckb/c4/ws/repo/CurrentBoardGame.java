@@ -31,11 +31,15 @@ public class CurrentBoardGame implements GameObject {
     @Field("next_turn")
     private String nextTurn;
 
+    @Field("current_move")
+    private String currentMove;
+
     @PersistenceConstructor
     public CurrentBoardGame(String gameSessionId, Board gameBoard, String nextTurn) {
         this.gameBoard = gameBoard;
         this.gameSessionId = gameSessionId;
         this.nextTurn = nextTurn;
+        this.currentMove = null;
     }
 
     public Board getGameBoard() {
@@ -65,6 +69,14 @@ public class CurrentBoardGame implements GameObject {
 
     public void setNextTurn(String nextTurn) {
         this.nextTurn = nextTurn;
+    }
+
+    public String getPreviousMove() {
+        return this.currentMove;
+    }
+
+    public void setCurrentMove(String currentMove) {
+        this.currentMove = currentMove;
     }
 
 }
