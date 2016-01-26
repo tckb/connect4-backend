@@ -1,5 +1,6 @@
 # basic.README #
 A simple implementation of Connect-N gamming backend server. Some of salient features include:
+
 * An N-connected board with size KXP, all of which can be configured via setup.
 * The game is implemented to support Multi-player including a (dumb!) version of AI the player can play against to.
 * Inherently, as the game works based on player and game ids, the game supports multisession as well!
@@ -50,8 +51,3 @@ expired_boards → 0.000MB / 0.008MB
 Continued more @ [Rest.README](rest).
 
 [app-props.link]: (https://bitbucket.org/tckb/connect4-glueck-games/src/6834e3dcbd1ea0b0676fd8a02c3cb7231697a5b6/src/main/resources/application.properties)
-
-
-
-
-
