@@ -21,7 +21,7 @@ api path  | method | description
 }
 
 ```
-* multi_player: a hint for the server to create a multiplayer game. If ```true``` the server waits for other player to join before allowing a piece placement.
+* multi_player: a hint for the server to create a multiplayer game. If ```true``` the server waits for other player to join before allowing a piece placement. If ```false```, then the server would choose an aiplayer (as defined in the setup) as an oppoent .
 
 A sample response from server
 ```
