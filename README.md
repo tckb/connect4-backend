@@ -50,4 +50,4 @@ expired_boards → 0.000MB / 0.008MB
 ```
 Continued more @ [Rest.README](rest).
 
-[app-props.link]: (../src/main/resources/application.properties)
+[app-props.link]: ../src/main/resources/application.properties
