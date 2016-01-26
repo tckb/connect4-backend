@@ -8,7 +8,7 @@ package com.tckb.c4.model.intf;
 import java.io.Serializable;
 
 /**
- * A marker abstract class for the objects in game.
+ * A marker interface class for the objects in game.
  * <p>
  * @author tckb
  */

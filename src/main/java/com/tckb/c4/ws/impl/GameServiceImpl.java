@@ -1,6 +1,7 @@
 package com.tckb.c4.ws.impl;
 
-import com.tckb.c4.model.concrete.AiPlayer;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tckb.c4.model.concrete.DumbAiPlayer;
 import com.tckb.c4.model.concrete.HumanPlayer;
 import com.tckb.c4.model.exception.GameException;
 import com.tckb.c4.model.exception.GameException.ColumnFilledException;
@@ -30,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * An implementation of GameService
+ * An implementation of GameService.
  * <p>
  * @author tckb
  */
@@ -63,7 +64,7 @@ public class GameServiceImpl {
                 String playerRef = generateRandomId();
                 String gameSessionId = generateRandomId();
 
-                Board playerBoard = (Board) GameFactory.getFactory(FactoryType.BOARD).createInstance(BoardType.C4, boardConfig.getBoardWidth(), boardConfig.getBoardHeight(), boardConfig.getWinningConnections());
+                Board playerBoard = (Board) GameFactory.getFactory(FactoryType.BOARD).createInstance(BoardType.ConnectN, boardConfig.getBoardWidth(), boardConfig.getBoardHeight(), boardConfig.getWinningConnections());
 
                 Player humanPlayer = (Player) GameFactory.getFactory(FactoryType.PLAYER).createInstance(PlayerType.Human, playerRef);
                 playerBoard.registerPlayer(humanPlayer);
@@ -129,6 +130,20 @@ public class GameServiceImpl {
         }
     }
 
+    /**
+     * Places a board piece.
+     * <p>
+     * @param gameSessionId game reference.
+     * @param playerRef     player reference.
+     * @param boardColumn   board column.
+     * <p>
+     * @return a string array of {thisPlayer move, opponent move, thisPlayer
+     *         chip color, game board}
+     * <p>
+     * @throws GameException.PlayerNotRegisteredException
+     * @throws GameException.ColumnFilledException
+     * @throws GameException.InvalidGameSessionException
+     */
     public String[] placeBoardPiece(String gameSessionId, String playerRef, String boardColumn) throws PlayerNotRegisteredException, ColumnFilledException, InvalidGameSessionException {
         CurrentBoardGame playerBoard = currentRepo.findOne(gameSessionId);
         if (playerBoard != null) {
@@ -162,7 +177,7 @@ public class GameServiceImpl {
 
                             String chip2 = null;
                             for (Player otherPlayer : otherPlayers) {
-                                if (otherPlayer instanceof AiPlayer) {
+                                if (otherPlayer instanceof DumbAiPlayer) {
                                     chip2 = otherPlayer.placeChipOnBoard(gameBoard);
                                     playerBoard.setNextTurn(playerMakingTheMove.getReference());
                                     thisLogger.log(Level.INFO, "AI player chip: {0}", chip2);
@@ -202,15 +217,17 @@ public class GameServiceImpl {
     }
 
     /**
-     *
-     * @return
+     * Get the entire game stats.
+     * <p>
+     * @return game board stats
      */
-    public String[] getOverallGameStats() {
-        return new String[]{Long.toString(currentRepo.count())};
+    public GameOverAllStats getOverallGameStats() {
+        return new GameOverAllStats(currentRepo.findAll(), expiredRepo.findAll());
     }
 
     /**
-     *
+     * setup the board game.
+     * <p>
      * @param configRequst
      */
     public void setupBoard(BoardConfiguration configRequst) {
@@ -226,6 +243,23 @@ public class GameServiceImpl {
      */
     protected String generateRandomId() {
         return RandomStringUtils.randomAlphanumeric(15);
+    }
+
+    /**
+     * Overall game stats
+     */
+    public class GameOverAllStats {
+
+        @JsonProperty("current_games")
+        protected final List<CurrentBoardGame> currentGameBoards;
+        @JsonProperty("expired_games")
+        protected final List<ExpiredBoardGame> expiredGameBoards;
+
+        public GameOverAllStats(List<CurrentBoardGame> currentGameBoards, List<ExpiredBoardGame> expiredGameBoards) {
+            this.currentGameBoards = currentGameBoards;
+            this.expiredGameBoards = expiredGameBoards;
+        }
+
     }
 
 }

@@ -8,21 +8,30 @@ package com.tckb.c4.model.concrete;
 import com.tckb.c4.model.exception.GameException.IllegalMoveException;
 import com.tckb.c4.model.intf.AbstractPlayer;
 import com.tckb.c4.model.intf.Board;
-import com.tckb.c4.model.intf.BoardChip;
 import java.util.Random;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- *
+ * A concrete implementation of AIplayer.
+ * <p>
+ * This is a dumb version of AI, which places the at random.
+ * <p>
  * @author tckb
  */
 @Document
-public class AiPlayer extends AbstractPlayer {
+public class DumbAiPlayer extends AbstractPlayer {
 
-    public AiPlayer(String reference, BoardChip chip) {
+    public DumbAiPlayer(String reference, BoardChip chip) {
         super(reference, chip);
     }
 
+    /**
+     * Returns a strategic move.
+     * <p>
+     * @param gameBoard board where the piece has to be placed.
+     * <p>
+     * @return column
+     */
     private int getNextStrategicMove(Board gameBoard) {
         return new Random().nextInt(gameBoard.getWidth());
     }

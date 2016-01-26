@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tckb.c4.model.intf;
+package com.tckb.c4.model.concrete;
 
+import com.tckb.c4.model.intf.GameObject;
 import java.util.Objects;
 
 /**
- *
+ * A class defining board chip.
+ * <p>
  * @author tckb
  */
 public class BoardChip implements GameObject {
@@ -37,14 +39,5 @@ public class BoardChip implements GameObject {
         int hash = 3 * Objects.hashCode(getChipColor());
         return hash;
     }
-
-    public static final String[] CHIP_COLORS = {
-        "BLUE",
-        "BLACK",
-        "GREEN",
-        "RED",
-        "WHITE",
-        "YELLOW"
-    };
 
 }

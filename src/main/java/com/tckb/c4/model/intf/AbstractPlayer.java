@@ -5,11 +5,13 @@
  */
 package com.tckb.c4.model.intf;
 
+import com.tckb.c4.model.concrete.BoardChip;
 import java.util.Objects;
 import org.springframework.data.annotation.Id;
 
 /**
- *
+ * An abstract helper class for implementing common methods for players
+ * <p>
  * @author tckb
  */
 public abstract class AbstractPlayer implements GameObject, Player {
@@ -57,6 +59,7 @@ public abstract class AbstractPlayer implements GameObject, Player {
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         final AbstractPlayer other = (AbstractPlayer) obj;
         return Objects.equals(this.reference, other.reference);
     }

@@ -5,6 +5,7 @@
  */
 package com.tckb.c4.model.intf;
 
+import com.tckb.c4.model.concrete.BoardChip;
 import com.tckb.c4.model.exception.GameException.IllegalMoveException;
 import com.tckb.c4.model.factory.PlayerFactory.PlayerType;
 
@@ -16,7 +17,8 @@ import com.tckb.c4.model.factory.PlayerFactory.PlayerType;
 public interface Player extends Comparable<Player> {
 
     /**
-     *
+     * Returns the board chip for this player.
+     * <p>
      * @return
      */
     public BoardChip getPlayerChip();
@@ -34,7 +36,6 @@ public interface Player extends Comparable<Player> {
      * NB: Not to be used for human player, else this will raise
      * {@link IllegalMoveException}
      * <p>
-     * <p>
      * @param gameBoard <p>
      * @return chip placement on the board.
      * <p>
@@ -42,6 +43,19 @@ public interface Player extends Comparable<Player> {
      */
     public String placeChipOnBoard(Board gameBoard);
 
+    /**
+     * Places a chip on board by human player.
+     * <br/>
+     * NB: Not to be used for ai player, else this will raise
+     * {@link IllegalMoveException}
+     * <p>
+     * @param gameBoard board which this player is registered to.
+     * @param column    column of the board.
+     * <p>
+     * @return a representation the chip place.
+     * <p>
+     * @see PlayerType#Human
+     */
     public String placeChipOnBoard(Board gameBoard, int column);
 
 }

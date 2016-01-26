@@ -11,7 +11,6 @@ import com.tckb.c4.model.exception.GameException.IllegalMoveException;
 import com.tckb.c4.model.exception.GameException.MaxPlayerRegisteredException;
 import com.tckb.c4.model.exception.GameException.PlayerNotRegisteredException;
 import com.tckb.c4.model.intf.Board;
-import com.tckb.c4.model.intf.BoardChip;
 import com.tckb.c4.model.intf.GameObject;
 import com.tckb.c4.model.intf.Player;
 import java.util.ArrayList;
@@ -39,6 +38,13 @@ public class ConnectNBoard implements GameObject, Board {
     private String winningPlayer;
     protected static final Logger thisLogger = Logger.getLogger(Board.class.getName());
 
+    /**
+     * Create and initialize the connect-n board
+     * <p>
+     * @param boardWidth     width of board
+     * @param boardHeight    height of the board
+     * @param maxConnections max connections (in-line) for winning
+     */
     @PersistenceConstructor
     public ConnectNBoard(Integer boardWidth, Integer boardHeight, Integer maxConnections) {
         thisLogger.log(Level.INFO, "Initializing board with width: {0} height: {1}", new Object[]{boardWidth, boardHeight});
@@ -221,6 +227,13 @@ public class ConnectNBoard implements GameObject, Board {
         return maxPlayers;
     }
 
+    /**
+     * Test if the move on the column is a legal move.
+     * <p>
+     * @param column column where the move is to be placed.
+     * <p>
+     * @return true if the column exists, false - if column does not exists.
+     */
     private boolean checkIfLegalMove(Integer column) {
         thisLogger.log(Level.INFO, "Checking if {0} has a legal move", column);
         if (column > getWidth()) {
@@ -259,10 +272,20 @@ public class ConnectNBoard implements GameObject, Board {
         return chipPlace;
     }
 
+    /**
+     * Adds a player to the registered list
+     * <p>
+     * @param player
+     */
     private void addPlayer(Player player) {
         registeredPlayers.add(player);
     }
 
+    /**
+     * Checks for the pieces in line, and assign it to winning player.
+     * <p>
+     * @return current status of the game.
+     */
     private GameStatus getCurrentGameStatus() {
         this.winningPlayer = checkforConnect4();
         if (this.winningPlayer != null) {
@@ -276,6 +299,14 @@ public class ConnectNBoard implements GameObject, Board {
         return GameStatus.GAME_IN_PROGRESS;
     }
 
+    /**
+     * Internal implementation of chip placement
+     * <p>
+     * @param playerChip
+     * @param column     <p>
+     * @return <p>
+     * @throws com.tckb.c4.model.exception.GameException.ColumnFilledException
+     */
     private String placeBoardChip(BoardChip playerChip, Integer column) throws ColumnFilledException {
         for (Integer y = 0; y < getHeight(); y++) {
             if (boardData[column][y] == null) {
@@ -335,15 +366,12 @@ public class ConnectNBoard implements GameObject, Board {
         return boardDataString;
     }
 
-    public Integer getNrPlayersJoined() {
-        return nrPlayersJoined;
-    }
-
-    public void setNrPlayersJoined(Integer nrPlayersJoined) {
-        this.nrPlayersJoined = nrPlayersJoined;
-    }
-
-    public String gridStatus() {
+    /**
+     * return a string representation of the board
+     * <p>
+     * @return
+     */
+    private String gridStatus() {
         StringBuilder board = new StringBuilder();
         for (int rows = boardHeight - 1; rows >= 0; rows--) {
             board.append("row: ").append(rows + 1).append("|\t");
@@ -364,14 +392,6 @@ public class ConnectNBoard implements GameObject, Board {
             board.append("\n");
         }
         return board.toString();
-    }
-
-    public String getWinningPlayer() {
-        return winningPlayer;
-    }
-
-    public void setWinningPlayer(String winningPlayer) {
-        this.winningPlayer = winningPlayer;
     }
 
     @Override

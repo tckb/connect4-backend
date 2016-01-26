@@ -12,29 +12,36 @@ import com.tckb.c4.model.exception.GameException.MaxPlayerRegisteredException;
 import java.util.List;
 
 /**
- *
+ * Contract for implementing any game board
+ * <p>
  * @author tckb
  */
 public interface Board {
 
+    /**
+     * Return the string representation of the board.
+     * <p>
+     * @return
+     */
     public String printBoardStatus();
 
     /**
-     *
-     * @return
+     * Returns a string array representation of the board pieces.
+     * <p>
+     * @return board data
+     * <p>
+     * @see #getWidth()
+     * @see #getHeight()
      */
     public String[][] getBoardData();
 
     /**
-     * Game finished status: One of
-     * <p>
+     * Game finished status:<code>
      * GAME_IN_PROGRESS,
-     * <br/>
      * GAME_TIED,
-     * <br/>
-     * GAME_ENDED.
+     * GAME_ENDED. </code>
      */
-    public enum GameStatus {
+    enum GameStatus {
 
         /**
          * Game has started.
@@ -64,17 +71,19 @@ public interface Board {
      * @param playerRef player making the move
      * @param column    column to which the player is placing the board piece
      * <p>
-     * @return the exact piece placement on the board (for eg,
-     *         <code>A1, A2</code> )
-     * <p>
-     * <code>null</code> if the column is already full.
+     * @return a string representation of the chip place (column:
+     *         <code>column</code>, position: <code>row</code>), such that
+     *         <code>1&lt;= row &lt;= {@link  #getHeight()}</code>
+     * <br/>
      * <p>
      * @throws ColumnFilledException thrown if you try to place on a column
      *                               which is already filled.
      * @throws GameFinished          thrown after the board piece is placed. If
      *                               the game is finished
      * @throws IllegalMoveException  thrown when a illegal move is placed by a
-     *                               player.
+     *                               player. for eg,
+     *                               <code>column &gt;= {@link #getWidth()}</code>
+     * @see #getWidth()
      */
     public String placeChipOnBoard(String playerRef, Integer column) throws ColumnFilledException;
 

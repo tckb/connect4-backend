@@ -15,7 +15,7 @@ import com.tckb.c4.model.intf.Board;
 public interface GameException {
 
     /**
-     *
+     * An exception to be thrown when a column is filled.
      */
     class ColumnFilledException extends RuntimeException {
 
@@ -26,7 +26,7 @@ public interface GameException {
     }
 
     /**
-     *
+     * An exception to be thrown when an illegal/expired board session is feed.
      */
     class InvalidGameSessionException extends Exception {
 
@@ -37,11 +37,8 @@ public interface GameException {
     }
 
     /**
-     * An exception to be throwned when a piece placement causes a game to
-     * finish.
+     * An exception to be thrown when a piece placement causes a game to finish.
      * <p>
-     * @see Board#moveBoardPiece(com.tckb.c4.model.intf.Player, int)
-     * @see GameStatus
      */
     class GameFinished extends RuntimeException {
 
@@ -76,7 +73,8 @@ public interface GameException {
     }
 
     /**
-     *
+     * An exception to be thrown when player tries to start a game before it has
+     * been setup.
      */
     class GameNotSetupException extends Exception {
 

@@ -6,13 +6,14 @@
 package com.tckb.c4.model.factory;
 
 /**
- *
+ * An Abstract family-of-factory for retrieving factories.
+ * <p>
  * @author tckb
  */
 public class GameFactory {
 
     /**
-     *
+     * type of factory to create
      */
     public enum FactoryType {
 

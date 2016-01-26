@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tckb.c4.model.intf.Board.GameStatus;
+import com.tckb.c4.ws.impl.GameServiceImpl.GameOverAllStats;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -222,6 +223,8 @@ public class WebServiceResponse {
         private String boardSession;
         @JsonProperty(value = "board_grid")
         private String boardData;
+        @JsonProperty(value = "game_stats")
+        private GameOverAllStats overallGameStats;
 
         public String getHumanTurn() {
             return humanTurn;
@@ -297,6 +300,10 @@ public class WebServiceResponse {
 
         public void setBoardData(String boardData) {
             this.boardData = boardData;
+        }
+
+        public void setGameStats(GameOverAllStats overallGameStats) {
+            this.overallGameStats = overallGameStats;
         }
 
     }

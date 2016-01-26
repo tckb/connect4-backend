@@ -8,10 +8,10 @@ package com.tckb.c4.model.concrete;
 import com.tckb.c4.model.exception.GameException.IllegalMoveException;
 import com.tckb.c4.model.intf.AbstractPlayer;
 import com.tckb.c4.model.intf.Board;
-import com.tckb.c4.model.intf.BoardChip;
 
 /**
- *
+ * A concrete implementation of Human Player.
+ * <p>
  * @author tckb
  */
 public class HumanPlayer extends AbstractPlayer {

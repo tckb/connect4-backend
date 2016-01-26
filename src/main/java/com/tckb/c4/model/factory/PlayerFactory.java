@@ -5,9 +5,9 @@
  */
 package com.tckb.c4.model.factory;
 
-import com.tckb.c4.model.concrete.AiPlayer;
+import com.tckb.c4.model.concrete.DumbAiPlayer;
 import com.tckb.c4.model.concrete.HumanPlayer;
-import com.tckb.c4.model.intf.BoardChip;
+import com.tckb.c4.model.concrete.BoardChip;
 import com.tckb.c4.model.intf.GameObject;
 import com.tckb.c4.model.intf.GameObjectType;
 import java.util.Random;
@@ -36,7 +36,7 @@ public class PlayerFactory extends AbstractGameFactory {
                     return humanPlayer;
 
                 case AI:
-                    return new AiPlayer("aiPlayer", randomChip);
+                    return new DumbAiPlayer("aiPlayer", randomChip);
             }
         }
 
@@ -49,11 +49,13 @@ public class PlayerFactory extends AbstractGameFactory {
     public enum PlayerType implements GameObjectType {
 
         /**
-         * Human player.
+         * Human player. expected param(in-order): <br/>
+         * <code>player-reference</code>
+         * <p>
          */
         Human,
         /**
-         * computer player.
+         * Computer player. (No params needed)
          */
         AI
     }

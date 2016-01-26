@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Controller for the game.
+ * Controller for the game service.
  * <p>
  * @author tckb
  */
@@ -167,8 +167,7 @@ public class GameController {
     @RequestMapping("/stats")
     public WebServiceResponse gameStatus() {
         WebServiceResponse response = new WebServiceResponse();
-        String[] gameStats = gameService.getOverallGameStats();
-        response.getResponseObject().setActivePlayer(gameStats[0]);
+        response.getResponseObject().setGameStats(gameService.getOverallGameStats());
         response.getResponseMetaData().success();
         return response;
     }
