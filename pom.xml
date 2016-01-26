@@ -67,7 +67,7 @@
     <build>
         <plugins>
             <!--
-            Generate java doc while install
+            Generate javadoc while install
             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
