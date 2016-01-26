@@ -59,6 +59,8 @@ public class GameController {
     private String invalidPlayerMsg;
     @Value("${game.error.invalid-ref}")
     private String invalidPlayerRefMsg;
+    @Value("${game.register.join}")
+    private String newJoinMsg;
 
     @Autowired
     private GameService gameService;
@@ -104,7 +106,7 @@ public class GameController {
 
         try {
             String[] gameRefs = gameService.registerAndJoinGame(boardSessionId);
-            response.getResponseObject().setMessage(newGameMsg);
+            response.getResponseObject().setMessage(newJoinMsg);
             response.getResponseObject().setBoardSession(gameRefs[0]);
             response.getResponseObject().setPlayerRef(gameRefs[1]);
             response.getResponseObject().setChipColor(gameRefs[2]);
