@@ -48,6 +48,6 @@ show collections
 current_boards → 0.000MB / 0.008MB
 expired_boards → 0.000MB / 0.008MB
 ```
-Continued more @ [Rest.README](rest).
+Continued more @ [Rest.README](./README-rest.md).
 
 [app-props.link]: ./src/main/resources/application.properties
