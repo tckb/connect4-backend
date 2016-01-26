@@ -12,9 +12,8 @@ A simple implementation of Connect-N gamming backend server. Some of salient fea
 
 
 ## System reqirements
-The system is completely built on top of the Java, so the entire dependencies are also related to it.
-### Build configuration
 The recommended configurations for building from the source:
+
 * Oracle Java SDK >= 1.8.*
 * Maven 3.2.*
 * git 2.4.*
