@@ -23,7 +23,7 @@ The recommended configurations for building from the source:
 ##### Downloading and Building
 
 ```
-$ git clone https://bitbucket.org/tckb/connect4-glueck-games.git
+$ git clone https://tckb@bitbucket.org/tckb/connect4-glueck-games.git
 $ cd connect4-glueck-games
 $ mvn clean package
 ```
