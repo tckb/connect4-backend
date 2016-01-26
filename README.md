@@ -5,13 +5,13 @@ A simple implementation of Connect-N gamming backend server. Some of salient fea
 * The game is implemented to support Multi-player including a (dumb!) version of AI the player can play against to.
 * Inherently, as the game works based on player and game ids, the game supports multisession as well!
 
-# Technologies/Framework considered
+## Technologies/Framework considered
 * Java >=1.8
 * Spring-boot(=1.3.2.RELEASE) for creating a micro-service, instead of full-blown framework.
 * Embedded MongoDB as a no-SQL database for storing board/player related details.
 
 
-# System reqirements
+## System reqirements
 The system is completely built on top of the Java, so the entire dependencies are also related to it.
 ### Build configuration
 The recommended configurations for building from the source:
