@@ -32,7 +32,7 @@ The above command will download the required dependencies and will create the ja
 ##### Source documentation
 While packaging, maven creates the java documentation of the project as well.
 ```
-$ cd connect4-glueck-games
+$ cd connect4-backend
 $ open target/apidocs/index.html
 ```
 Incase of using windows, use ```start``` instead of _open_.
@@ -40,7 +40,7 @@ Incase of using windows, use ```start``` instead of _open_.
 ##### Runnning the application
 The application has an inbuilt embedded server, so suffice to have only JRE (>=1.8.*).
 ```
-$ cd connect4-glueck-games
+$ cd connect4-backend
 $ java -jar target/connect4-<version>.jar
 ```
 By default, the server runs on port ```8090``` . To change any project related configuration please see [application.properties] [app-props.link]. For more detailed configuration, please consult [spring-boot-application.properties](https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html)
