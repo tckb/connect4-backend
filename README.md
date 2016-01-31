@@ -23,8 +23,8 @@ The recommended configurations for building from the source:
 ##### Downloading and Building
 
 ```
-$ git clone https://tckb@bitbucket.org/tckb/connect4-glueck-games.git
-$ cd connect4-glueck-games
+$ git clone https://github.com/tckb/connect4-backend.git
+$ cd connect4-backend
 $ mvn clean package
 ```
 The above command will download the required dependencies and will create the jar file of the application in ```target``` folder incuding the documentation of the source.
